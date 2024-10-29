@@ -1,7 +1,6 @@
 import { type FastifyInstance, type FastifyPluginAsync } from 'fastify'
 import { initServer } from '@ts-rest/fastify'
 import { apiContract } from '@workspace/contracts'
-import { postsContractRouter } from '../contracts/blog'
 import { helloContractRouter } from '../contracts/hello'
 
 /**
@@ -12,7 +11,6 @@ const contract: FastifyPluginAsync = async function (fastify: FastifyInstance): 
   const s = initServer()
 
   const contractsRouter = s.router(apiContract, {
-    posts: postsContractRouter.routes,
     hello: helloContractRouter.routes,
   })
 

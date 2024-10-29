@@ -1,5 +1,4 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
-import { apiBlogContract } from './features/blog.contract'
 import { apiHelloContract } from './features/hello.contract'
 import { API_PATH_PREFIX } from './constants'
 
@@ -15,7 +14,6 @@ const routerOptions: RouterOptions<typeof API_PATH_PREFIX> = {
 
 export const apiContract = c.router(
   {
-    posts: apiBlogContract,
     hello: apiHelloContract,
   },
   routerOptions,
