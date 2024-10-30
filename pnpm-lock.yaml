@@ -143,6 +143,9 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
+      '@fastify/cors':
+        specifier: ^8.0.0
+        version: 8.5.0
       '@fastify/sensible':
         specifier: ~5.6.0
         version: 5.6.0
@@ -198,6 +201,12 @@ importers:
 
   apps/next:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.59.16
+        version: 5.59.16(react@19.0.0-rc-02c0e824-20241028)
+      '@ts-rest/react-query':
+        specifier: ^3.51.0
+        version: 3.51.0(@tanstack/react-query@5.59.16)(@ts-rest/core@3.51.0)(react@19.0.0-rc-02c0e824-20241028)
       '@workspace/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
@@ -1443,6 +1452,13 @@ packages:
       fast-uri: 2.4.0
     dev: false
 
+  /@fastify/cors@8.5.0:
+    resolution: {integrity: sha512-/oZ1QSb02XjP0IK1U0IXktEsw/dUBTxJOW7IpIeO8c/tNalw/KjoNSJv1Sf6eqoBPO+TDGkifq6ynFK3v68HFQ==}
+    dependencies:
+      fastify-plugin: 4.5.1
+      mnemonist: 0.39.6
+    dev: false
+
   /@fastify/error@3.4.1:
     resolution: {integrity: sha512-wWSvph+29GR783IhmvdwWnN4bUxTD01Vm5Xad4i7i1VuAOItLvbPAb69sb0IQ2N57yprvhNIwAP5B6xfKTmjmQ==}
     dev: false
@@ -2053,6 +2069,19 @@ packages:
       - typescript
     dev: true
 
+  /@tanstack/query-core@5.59.16:
+    resolution: {integrity: sha512-crHn+G3ltqb5JG0oUv6q+PMz1m1YkjpASrXTU+sYWW9pLk0t2GybUHNRqYPZWhxgjPaVGC4yp92gSFEJgYEsPw==}
+    dev: false
+
+  /@tanstack/react-query@5.59.16(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-MuyWheG47h6ERd4PKQ6V8gDyBu3ThNG22e1fRVwvq6ap3EqsFhyuxCAwhNP/03m/mLg+DAb0upgbPaX6VB+CkQ==}
+    peerDependencies:
+      react: ^18 || ^19
+    dependencies:
+      '@tanstack/query-core': 5.59.16
+      react: 19.0.0-rc-02c0e824-20241028
+    dev: false
+
   /@testing-library/dom@10.4.0:
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
     engines: {node: '>=18'}
@@ -2146,6 +2175,22 @@ packages:
       '@ts-rest/core': 3.51.0(@types/node@20.14.2)(zod@3.23.8)
       openapi3-ts: 2.0.2
       zod: 3.23.8
+    dev: false
+
+  /@ts-rest/react-query@3.51.0(@tanstack/react-query@5.59.16)(@ts-rest/core@3.51.0)(react@19.0.0-rc-02c0e824-20241028):
+    resolution: {integrity: sha512-pWrbyRqvcvmjvm+ORu3zE3sPFqsS6CHOq5vra/UtyLEgXrcnEA+fu/7d9tj/+BLRwe0kOWvalu2S3/d3SDxvFQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^4.0.0 || ^5.0.0
+      '@ts-rest/core': ~3.51.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      zod: ^3.22.3
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@tanstack/react-query': 5.59.16(react@19.0.0-rc-02c0e824-20241028)
+      '@ts-rest/core': 3.51.0(@types/node@20.14.2)(zod@3.23.8)
+      react: 19.0.0-rc-02c0e824-20241028
     dev: false
 
   /@types/aria-query@5.0.4:
@@ -5458,6 +5503,12 @@ packages:
       ufo: 1.5.4
     dev: true
 
+  /mnemonist@0.39.6:
+    resolution: {integrity: sha512-A/0v5Z59y63US00cRSLiloEIw3t5G+MiKz4BhX21FI+YBJXBOGW0ohFxTxO08dsOYlzxo87T7vGfZKYp2bcAWA==}
+    dependencies:
+      obliterator: 2.0.4
+    dev: false
+
   /mrmime@2.0.0:
     resolution: {integrity: sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==}
     engines: {node: '>=10'}
@@ -5637,6 +5688,10 @@ packages:
       define-properties: 1.2.1
       es-object-atoms: 1.0.0
     dev: true
+
+  /obliterator@2.0.4:
+    resolution: {integrity: sha512-lgHwxlxV1qIg1Eap7LgIeoBWIMFibOjbrYPIPJZcI1mmGAI2m3lNYpK12Y+GBdPQ0U1hRwSord7GIaawz962qQ==}
+    dev: false
 
   /on-exit-leak-free@2.1.2:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}

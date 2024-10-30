@@ -11,12 +11,12 @@ const contract: FastifyPluginAsync = async function (fastify: FastifyInstance): 
   const s = initServer()
 
   const contractsRouter = s.router(apiContract, {
-    hello: helloContractRouter.routes,
+    hello: helloContractRouter,
   })
 
   await fastify.register(s.plugin(contractsRouter), {
     // enable for ts-rest to log routes (warning: uses console.log() instead of fastify.log.info())
-    // logInitialization: true,
+    logInitialization: true,
 
     // validate reponses against the contract for rigour (throws `ResponseValidationError` with status 500 on mismatch)
     responseValidation: true,

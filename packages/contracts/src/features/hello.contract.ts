@@ -19,7 +19,6 @@ export const apiHelloContract = c.router(
         200: zHelloDto,
         404: z.null(),
       },
-      pathParams: zUuidParams,
       query: null,
       summary: 'Get a hello message',
       metadata: { roles: ['guest', 'user'] } as const,

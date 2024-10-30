@@ -216,7 +216,6 @@ export default tseslint.config(
       },
     },
 
-    // @ts-expect-error -- upstream type issue (tseslint #9115) https://github.com/eslint/rewrite/issues/25
     rules: {
       'no-unused-vars': 'off',
 
