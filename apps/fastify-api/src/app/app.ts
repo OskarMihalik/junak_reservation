@@ -10,20 +10,9 @@ export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<void> {
   await fastify.register(cors, {
-    origin: (origin, cb) => {
-      if (!origin) {
-        cb(new Error('Not allowed'), false)
-        return
-      }
-      const hostname = new URL(origin).hostname
-      if (hostname === 'localhost') {
-        //  Request from localhost will pass
-        cb(null, true)
-        return
-      }
-      // Generate an error on other origins, disabling access
-      cb(new Error('Not allowed'), false)
-    },
+    origin: ['*'],
+    methods: ['GET', 'POST'],
+    credentials: true,
   })
 
   const db = await initORM()

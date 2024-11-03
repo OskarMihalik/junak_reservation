@@ -16,7 +16,7 @@ export const apiUserContract = c.router(
       method: 'GET',
       path: '/',
       responses: {
-        200: zUserDto,
+        200: zUserDto.array(),
         404: z.null(),
       },
       query: null,
