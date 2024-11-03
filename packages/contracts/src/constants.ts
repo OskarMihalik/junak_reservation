@@ -5,3 +5,4 @@ export const API_PATH_PREFIX = '/api/v1'
 
 export const BLOG_CONTRACT_PATH_PREFIX = '/posts'
 export const HELLO_CONTRACT_PATH_PREFIX = '/hello'
+export const USER_CONTRACT_PATH_PREFIX = '/user'

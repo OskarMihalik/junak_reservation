@@ -116,3 +116,5 @@ testem.log
 /typings
 .yarn-integrity
 *.tsbuildinfo
+
+sqlite.db

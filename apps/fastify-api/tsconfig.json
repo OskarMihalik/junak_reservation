@@ -3,7 +3,7 @@
   // the fastify-tsconfig package sets `module` and `moduleResolution` to NodeNext
   // e.g. "extends": ["../../tsconfig.base.json", "fastify-tsconfig"],
   //
-  "extends": ["../../tsconfig.base.json"],
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "strict": true,
     "outDir": "dist",
