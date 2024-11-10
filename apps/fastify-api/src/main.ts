@@ -5,23 +5,23 @@ import { MikroORM, RequestContext } from '@mikro-orm/core'
 export const HOST = process.env.HOST ?? 'localhost'
 export const PORT = process.env.PORT ? Number(process.env.PORT) : 3939
 
-const fastify: FastifyInstance = Fastify({ logger: true, disableRequestLogging: false })
+export const fastifyInstance: FastifyInstance = Fastify({ logger: true, disableRequestLogging: false })
 
 const start = async (): Promise<void> => {
   try {
-    await fastify.ready()
+    await fastifyInstance.ready()
 
     // debug helpers --
     // console.info(fastify.printPlugins())
     // console.info(fastify.printRoutes())
 
-    await fastify.listen({ host: HOST, port: PORT })
+    await fastifyInstance.listen({ host: HOST, port: PORT })
   } catch (error: unknown) {
-    fastify.log.error(error)
+    fastifyInstance.log.error(error)
     process.exit(1)
   }
 }
 
-await fastify.register(app)
+await fastifyInstance.register(app)
 
 await start()

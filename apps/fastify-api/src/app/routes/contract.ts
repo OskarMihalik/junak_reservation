@@ -13,7 +13,7 @@ const contract: FastifyPluginAsync = async function (fastify: FastifyInstance): 
 
   const contractsRouter = s.router(apiContract, {
     hello: helloContractRouter,
-    user: userContractRouter,
+    user: userContractRouter(fastify).routes,
   })
 
   await fastify.register(s.plugin(contractsRouter), {

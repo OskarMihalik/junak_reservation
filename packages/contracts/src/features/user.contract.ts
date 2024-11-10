@@ -1,7 +1,17 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
 import { z } from 'zod'
-import { zHelloDto, zUserDto, zUuidParams } from '@workspace/data'
+import {
+  zErrorDto,
+  zHelloDto,
+  zLoginUserDto,
+  zRegisterUserDto,
+  zRegisterUserResponseDto,
+  zTokenDto,
+  zUserDto,
+  zUuidParams,
+} from '@workspace/data'
 import { USER_CONTRACT_PATH_PREFIX } from '../constants'
+import { register } from 'module'
 
 const c = initContract()
 
@@ -17,11 +27,34 @@ export const apiUserContract = c.router(
       path: '/',
       responses: {
         200: zUserDto.array(),
-        404: z.null(),
+        401: zErrorDto,
       },
-      query: null,
       summary: 'Get a user',
-      metadata: { roles: ['guest', 'user'] } as const,
+    },
+    registerUser: {
+      method: 'POST',
+      path: '/register',
+      body: zRegisterUserDto,
+      responses: {
+        201: zRegisterUserResponseDto,
+      },
+    },
+    loginUser: {
+      method: 'POST',
+      path: '/login',
+      body: zLoginUserDto,
+      responses: {
+        200: zTokenDto,
+        401: zErrorDto,
+      },
+    },
+    logoutUser: {
+      method: 'DELETE',
+      path: '/logout',
+      responses: {
+        200: z.null(),
+        401: zErrorDto,
+      },
     },
   },
   routerOptions,

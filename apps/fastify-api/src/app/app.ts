@@ -1,10 +1,12 @@
-import type { FastifyInstance } from 'fastify'
+import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import sensiblePlugin from './plugins/sensible'
 import rootRoute from './routes/root'
 import contractRoutes from './routes/contract'
 import cors from '@fastify/cors'
 import { MikroORM, RequestContext } from '@mikro-orm/core'
 import { initORM } from './db'
+import fjwt, { type FastifyJWT } from '@fastify/jwt'
+import fCookie from '@fastify/cookie'
 
 export interface AppOptions {}
 
@@ -17,9 +19,34 @@ export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<v
 
   const db = await initORM()
 
+  // jwt
+  fastify.register(fjwt, { secret: 'supersecretcode-CHANGE_THIS-USE_ENV_FILE' })
+
   // register request context hook
   fastify.addHook('onRequest', (_request, _reply, done) => {
     RequestContext.create(db.em, done)
+  })
+
+  fastify.addHook('preHandler', (req, _res, next) => {
+    // here we are
+    req.jwt = fastify.jwt
+    return next()
+  })
+
+  fastify.register(fCookie, {
+    secret: 'some-secret-key',
+    hook: 'preHandler',
+  })
+
+  fastify.decorate('authenticate', async (req: FastifyRequest, reply: FastifyReply) => {
+    const token = req.cookies.access_token
+
+    if (!token) {
+      return reply.status(401).send({ message: 'Authentication required' })
+    }
+    // here decoded will be a different type by default but we want it to be of user-payload type
+    const decoded = req.jwt.verify<FastifyJWT['user']>(token)
+    req.user = decoded
   })
 
   // register plugins

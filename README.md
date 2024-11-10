@@ -38,3 +38,7 @@ npx mikro-orm-esm schema:update --run
 ### Migrations 
 not needed now
 
+# DB
+```
+docker compose up
+```
