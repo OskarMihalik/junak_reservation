@@ -10,7 +10,18 @@ export default function DashboardLayout({
   return (
     <section>
       {/* Include shared UI here e.g. a header or sidebar */}
-      <Header />
+      <Header
+        items={[
+          {
+            title: 'Home',
+            href: '/',
+          },
+          {
+            title: 'About',
+            href: '/about',
+          },
+        ]}
+      />
       {children}
     </section>
   )
