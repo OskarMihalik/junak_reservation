@@ -22,11 +22,11 @@ export const apiUserContract = c.router(
       method: 'GET',
       path: '/',
       responses: {
-        200: zUserDto.array(),
+        200: z.array(zUserDto),
         400: zErrorDto,
         401: zErrorDto,
       },
-      summary: 'Get a user',
+      summary: 'Get all users',
     },
     getUser: {
       method: 'GET',

@@ -4,9 +4,8 @@ import { initORM } from '../db'
 import { User } from '../../modules/user/user.entity'
 import bcrypt from 'bcrypt'
 import { zUserDto } from '@workspace/data'
-import { app } from '../app'
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import type { FastifyJWT } from '@fastify/jwt'
+import type { FastifyInstance } from 'fastify'
+import { mapUserToDto } from "../../modules/user/user.mapper";
 
 const SALT_ROUNDS = 10
 
@@ -15,16 +14,34 @@ const db = await initORM()
 
 export const userContractRouter = (app: FastifyInstance) => ({
   routes: s.router(apiContract.user, {
-    getUser: {
+    getUsers: {
       hooks: {
         preHandler: [app.authenticate],
       },
       handler: async () => {
-        const [items, total] = await db.orm.em.findAndCount(User, {})
+        const users = await db.orm.em.find(User, {});
+        const usersDto = users.map(mapUserToDto);
 
         return {
           status: 200,
-          body: items,
+          body: usersDto,
+        };
+      },
+    },
+    getUser: {
+      hooks: {
+        preHandler: [app.authenticate],
+      },
+      handler: async (request) => {
+        var { id }  = request.params;
+
+        const user = await db.orm.em.findOne(User, { id: parseInt(id) });
+
+        const userDto = mapUserToDto(user as User);
+
+        return {
+          status: 200,
+          body: userDto,
         }
       },
     },
@@ -32,9 +49,10 @@ export const userContractRouter = (app: FastifyInstance) => ({
       handler: async (request) => {
         request.body.password = await bcrypt.hash(request.body.password, 10)
         console.log(request.body)
-        const user = db.user.create(request.body)
+        var user = new User(false, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
+        const userCmd = db.user.create(user)
 
-        await db.user.insert(user)
+        await db.user.insert(userCmd)
 
         return {
           status: 201,
