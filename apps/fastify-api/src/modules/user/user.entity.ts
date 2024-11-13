@@ -6,7 +6,16 @@ export class User {
   id!: number
 
   @Property()
-  fullName!: string
+  isAdmin!: boolean
+
+  @Property()
+  aisId!: number
+
+  @Property()
+  name!: string
+
+  @Property()
+  surname!: string
 
   @Unique()
   @Property()
@@ -14,4 +23,14 @@ export class User {
 
   @Property()
   password!: string
+
+  constructor(isAdmin: boolean, aisId: number, name: string, surname: string, email: string, password: string) {
+    this.isAdmin = isAdmin;
+    this.aisId = aisId;
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.password = password;
+  }
+
 }
