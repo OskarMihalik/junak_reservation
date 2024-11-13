@@ -9,9 +9,6 @@
 
     // path aliases
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
 
     // build configuration
     "target": "ESNext",

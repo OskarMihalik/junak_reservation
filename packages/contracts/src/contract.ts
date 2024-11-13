@@ -2,10 +2,10 @@ import { initContract, type RouterOptions } from '@ts-rest/core'
 import { apiHelloContract } from './features/hello.contract'
 import { API_PATH_PREFIX } from './constants'
 import { apiUserContract } from './features/user.contract'
-import { apiAdminScheduleContract } from "@/features/adminSchedule.contract";
-import { apiScheduleContract } from "@/features/schedule.contract";
-import { apiAdminSubscriptionContract } from "@/features/adminSubscription.contract";
-import { apiSubscriptionContract } from "@/features/subscription.contract";
+import { apiAdminScheduleContract } from './features/adminSchedule.contract'
+import { apiAdminSubscriptionContract } from './features/adminSubscription.contract'
+import { apiScheduleContract } from './features/schedule.contract'
+import { apiSubscriptionContract } from './features/subscription.contract'
 
 const c = initContract()
 
