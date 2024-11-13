@@ -105,8 +105,5 @@
   "eslint.useFlatConfig": true,
   "eslint.workingDirectories": [{ "mode": "auto" }],
 
-  // get eslint to use local node version instead of version bundled with vscode
-  "eslint.runtime": "node",
-
   "conventionalCommits.scopes": ["env"]
 }

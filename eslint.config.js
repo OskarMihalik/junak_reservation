@@ -234,7 +234,7 @@ export default tseslint.config(
       'react-hooks/exhaustive-deps': 'error',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
-      '@tanstack/query/stable-query-client': 'error',
+      // '@tanstack/query/stable-query-client': 'error',
       '@tanstack/query/no-rest-destructuring': 'error',
       '@tanstack/query/exhaustive-deps': 'error',
 
