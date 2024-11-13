@@ -2,16 +2,12 @@ import { initContract, type RouterOptions } from '@ts-rest/core'
 import { z } from 'zod'
 import {
   zErrorDto,
-  zHelloDto,
   zLoginUserDto,
   zRegisterUserDto,
-  zRegisterUserResponseDto,
   zTokenDto,
   zUserDto,
-  zUuidParams,
 } from '@workspace/data'
 import { USER_CONTRACT_PATH_PREFIX } from '../constants'
-import { register } from 'module'
 
 const c = initContract()
 
@@ -22,12 +18,24 @@ const routerOptions: RouterOptions<typeof USER_CONTRACT_PATH_PREFIX> = {
 
 export const apiUserContract = c.router(
   {
-    getUser: {
+    getUsers: {
       method: 'GET',
       path: '/',
       responses: {
         200: zUserDto.array(),
+        400: zErrorDto,
         401: zErrorDto,
+      },
+      summary: 'Get a user',
+    },
+    getUser: {
+      method: 'GET',
+      path: '/:id',
+      responses: {
+        200: zUserDto,
+        400: zErrorDto,
+        401: zErrorDto,
+        404: zErrorDto,
       },
       summary: 'Get a user',
     },
@@ -36,7 +44,8 @@ export const apiUserContract = c.router(
       path: '/register',
       body: zRegisterUserDto,
       responses: {
-        201: zRegisterUserResponseDto,
+        201: zUserDto,
+        400: zErrorDto,
       },
     },
     loginUser: {
@@ -45,14 +54,17 @@ export const apiUserContract = c.router(
       body: zLoginUserDto,
       responses: {
         200: zTokenDto,
+        400: zErrorDto,
         401: zErrorDto,
       },
     },
     logoutUser: {
-      method: 'DELETE',
+      method: 'POST',
       path: '/logout',
+      body: z.null(),
       responses: {
         200: z.null(),
+        400: zErrorDto,
         401: zErrorDto,
       },
     },
