@@ -1,4 +1,7 @@
 'use client'
+
+import Header from '@/components/ui/header'
+
 export default function DashboardLayout({
   children, // will be a page or nested layout
 }: {
@@ -7,8 +10,7 @@ export default function DashboardLayout({
   return (
     <section>
       {/* Include shared UI here e.g. a header or sidebar */}
-      uga buga
-      <nav></nav>
+      <Header />
       {children}
     </section>
   )
