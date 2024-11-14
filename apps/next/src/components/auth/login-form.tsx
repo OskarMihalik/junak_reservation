@@ -27,7 +27,8 @@ const LoginForm = () => {
     <FormWrapper
     label = "Log into your account"
     title = "Login"
-    backLabel = "Don't have an account?"
+    backLabel = "Don't have an account? Register here"
+    backRef = "../../auth/register"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

@@ -30,7 +30,8 @@ const RegisterForm = () => {
     <FormWrapper
     label = "Create an account"
     title = "Register"
-    backLabel = "Already have an account?"
+    backLabel = "Already have an account? Login here"
+    backRef= "../../auth/login"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
