@@ -60,7 +60,7 @@ export const apiAdminScheduleContract = c.router(
       method: 'DELETE',
       path: '/:id',
       responses: {
-        204: z.null(),
+        204: z.string(),
         401: zErrorDto,
         404: zErrorDto,
       },

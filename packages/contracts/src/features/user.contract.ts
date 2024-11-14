@@ -61,9 +61,9 @@ export const apiUserContract = c.router(
     logoutUser: {
       method: 'POST',
       path: '/logout',
-      body: z.null(),
+      body: null,
       responses: {
-        200: z.null(),
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
       },
