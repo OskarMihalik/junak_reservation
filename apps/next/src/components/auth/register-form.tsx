@@ -16,7 +16,7 @@ const RegisterForm = () => {
     defaultValues: {
       name: "",
       surname: "",
-      aisId: "",
+      aisId: 0,
       email: "",
       password: ""
     }
