@@ -108,9 +108,10 @@ export const userContractRouter = (app: FastifyInstance) => ({
       handler: async (request) => {
         request.reply.clearCookie('access_token')
 
+
         return {
           status: 200,
-          body: null,
+          body: 'Logged out',
         }
       },
     },

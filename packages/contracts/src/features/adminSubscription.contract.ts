@@ -39,7 +39,7 @@ export const apiAdminSubscriptionContract = c.router(
     approveSubscription: {
       method: 'POST',
       path: '/approve/:id',
-      body: z.null(),
+      body: null,
       responses: {
         200: zResponseSubscriptionDto,
         400: zErrorDto,
@@ -51,7 +51,7 @@ export const apiAdminSubscriptionContract = c.router(
     revokeSubscription: {
       method: 'POST',
       path: '/revoke/:id',
-      body: z.null(),
+      body: null,
       responses: {
         200: zResponseSubscriptionDto,
         400: zErrorDto,
