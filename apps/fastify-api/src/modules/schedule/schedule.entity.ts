@@ -1,5 +1,5 @@
-import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection } from '@mikro-orm/core';
-import { DaySchedule } from "../daySchedule/daySchedule.entity";
+import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection } from '@mikro-orm/core'
+import { DaySchedule } from '../daySchedule/daySchedule.entity.js'
 
 export enum DayEnum {
   MON = 'MON',

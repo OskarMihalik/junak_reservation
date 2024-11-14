@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Enum, ManyToOne } from '@mikro-orm/core';
-import { User } from '../user/user.entity'; // Adjust the import path as necessary
+import { User } from '../user/user.entity.js'
 
 export enum SubscriptionStatus {
   WAITING = 'WAITING',

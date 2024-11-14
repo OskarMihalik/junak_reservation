@@ -1,5 +1,5 @@
-import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
-import { Schedule } from '../schedule/schedule.entity';
+import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core'
+import { Schedule } from '../schedule/schedule.entity.js'
 
 @Entity()
 export class DaySchedule {
