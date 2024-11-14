@@ -7,6 +7,7 @@ import { z } from 'zod'
 export interface UserDto extends z.infer<typeof zUserDto> {}
 
 export const zUserDto = z.object({
+  id: z.number().int().positive(),
   name: z.string(),
   surname: z.string(),
   aisId: z.number().int(),
