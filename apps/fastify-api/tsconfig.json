@@ -36,8 +36,10 @@
   },
   "include": ["../../reset.d.ts", "src/**/*.ts"],
   "ts-node": {
+    "esm": true,
+    "transpileOnly": true,
     "compilerOptions": {
-      "esModuleInterop": true
+      "esModuleInterop": true,
     }
   }
 }
