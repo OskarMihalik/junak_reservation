@@ -47,7 +47,7 @@ export const userContractRouter = (app: FastifyInstance) => ({
     },
     registerUser: {
       handler: async (request) => {
-        request.body.password = await bcrypt.hash(request.body.password, 10)
+        request.body.password = await bcrypt.hash(request.body.password, SALT_ROUNDS)
         console.log(request.body)
         var user = new User(true, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
         const userCmd = db.userCtx.create(user)
