@@ -20,7 +20,7 @@ export const apiSubscriptionContract = c.router(
       method: 'GET',
       path: '/',
       responses: {
-        200: zResponseSubscriptionDto.array(),
+        200: z.array(zResponseSubscriptionDto),
         400: zErrorDto,
         401: zErrorDto,
       },
