@@ -5,6 +5,7 @@ import { helloContractRouter } from '../contracts/hello.js'
 import { userContractRouter } from '../contracts/user.js'
 import { adminScheduleContractRouter } from "../contracts/adminScheduleController.js";
 import { scheduleContractRouter } from "../contracts/scheduleController.js";
+import {subscriptionContractRouter} from "../contracts/subscriptionController.js";
 
 /**
  * Implementation of the ts-rest contract on the API side as a "contract router".
@@ -19,7 +20,7 @@ const contract: FastifyPluginAsync = async function (fastify: FastifyInstance): 
     adminSchedule: adminScheduleContractRouter(fastify).routes,
     schedule: scheduleContractRouter(fastify).routes,
     // adminSubscription: undefined,
-    // subscription: undefined
+    subscription: subscriptionContractRouter(fastify).routes
   })
 
   await fastify.register(s.plugin(contractsRouter), {
