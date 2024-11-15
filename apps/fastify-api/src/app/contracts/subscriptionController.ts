@@ -47,23 +47,13 @@ export const subscriptionContractRouter = (app: FastifyInstance) => ({
         preHandler: [app.authenticate],
       },
       handler: async (request) => {
-        const authorizationHeader = request.headers.authorization;
-        if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
-          return {
-            status: 401,
-            body: {
-              message: 'Unauthorized: No token provided'
-            },
-          };
-        }
-        // const token = authorizationHeader.split(' ')[1]!;
-        // const user = request.request.jwt.verify(token);
+        const user= request.request.user
 
         const body = request.body;
 
         const subscription = new Subscription();
         subscription.subscriptionPeriod = body.subscriptionPeriod;
-        subscription.variableSymbol = generateVariableSymbol(subscription.subscriptionPeriod);
+        subscription.variableSymbol = generateVariableSymbol(user.aisId, subscription.subscriptionPeriod);
 
         const subscriptionCmd = db.subscription.create(subscription);
         await db.subscription.insert(subscriptionCmd);
