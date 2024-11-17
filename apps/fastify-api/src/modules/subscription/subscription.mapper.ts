@@ -7,11 +7,11 @@ export function mapSubscriptionToDto(subscription: Subscription) {
     variableSymbol: subscription.variableSymbol,
     subscriptionPeriod: subscription.subscriptionPeriod,
     status: subscription.status,
-    generatedAt: subscription.generatedAt.toDateString(),
-    approvedAt: subscription.approvedAt?.toDateString() ?? "N/A",
+    generatedAt: subscription.generatedAt.toISOString(),
+    approvedAt: subscription.approvedAt?.toISOString() ?? null,
     approvedBy: subscription.approvedBy ?? null,
-    expiresAt: subscription.expiresAt?.toDateString() ?? "N/A",
-    revokedAt: subscription.revokedAt?.toDateString() ?? "N/A",
+    expiresAt: subscription.expiresAt?.toISOString() ?? null,
+    revokedAt: subscription.revokedAt?.toISOString() ?? null,
     revokedBy: subscription.revokedBy ?? null,
   }
 }

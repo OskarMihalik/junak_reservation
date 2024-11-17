@@ -42,4 +42,10 @@ export class Subscription {
 
   @Property({ nullable: true })
   revokedBy?: number;
+
+  constructor(user: User, variableSymbol: number, subscriptionPeriod: number) {
+    this.user = user;
+    this.variableSymbol = variableSymbol;
+    this.subscriptionPeriod = subscriptionPeriod;
+  }
 }
