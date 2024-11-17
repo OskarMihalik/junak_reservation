@@ -4,7 +4,6 @@ import type {FastifyInstance} from "fastify";
 import {apiContract} from "@workspace/contracts";
 import {Subscription} from "../../modules/subscription/subscription.entity";
 import {mapSubscriptionToDto} from "../../modules/subscription/subscription.mapper";
-import { zResponseSubscriptionDto } from "@workspace/data";
 import {generateVariableSymbol} from "../services/subscriptionService";
 import {User} from "../../modules/user/user.entity";
 
