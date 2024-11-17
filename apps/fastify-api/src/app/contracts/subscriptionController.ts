@@ -79,7 +79,6 @@ export const subscriptionContractRouter = (app: FastifyInstance) => ({
         await db.subscription.insert(subscriptionCmd);
 
         const subscriptionDto = mapSubscriptionToDto(subscription)
-        // const parsedSubscription = zResponseSubscriptionDto.parse(subscription)
 
         return {
           status: 200,
