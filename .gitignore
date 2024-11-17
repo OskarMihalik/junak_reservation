@@ -120,4 +120,5 @@ testem.log
 sqlite.db
 package.json
 pnpm-lock.yaml
-User.ts.json
+/db/data/*
+/apps/fastify-api/temp/*
