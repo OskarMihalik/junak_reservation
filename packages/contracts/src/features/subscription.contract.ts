@@ -5,7 +5,7 @@ import {
   zRequestSubscriptionDto,
   zResponseSubscriptionDto
 } from '@workspace/data'
-import { SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from "../constants";
+import { SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from "../constants.js";
 
 const c = initContract()
 

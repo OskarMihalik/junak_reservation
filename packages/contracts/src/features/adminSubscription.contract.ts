@@ -4,7 +4,7 @@ import {
   zErrorDto,
   zResponseSubscriptionDto
 } from '@workspace/data'
-import { ADMIN_SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from "../constants";
+import { ADMIN_SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from "../constants.js";
 
 const c = initContract()
 

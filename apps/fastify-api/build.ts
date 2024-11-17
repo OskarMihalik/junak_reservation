@@ -21,7 +21,11 @@ await esbuild.build({
   platform: 'node',
   format: 'esm',
   target: 'node20',
+  external: ['mock-aws-s3', 'aws-sdk', 'nock', 'mariadb/callback', 'libsql', 'better-sqlite3', 'mysql2', 'better-sqlite3', 'pg-query-stream', 'tedious', 'mysql', 'oracledb', 'oracledb', ''],
   banner: {
     js: 'import { createRequire } from "module"; import url from "url"; const require = createRequire(import.meta.url); const __filename = url.fileURLToPath(import.meta.url); const __dirname = url.fileURLToPath(new URL(".", import.meta.url));',
+  },
+  loader: {
+    '.html': 'text',
   },
 })

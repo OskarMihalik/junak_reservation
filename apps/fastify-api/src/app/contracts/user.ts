@@ -1,11 +1,11 @@
 import { initServer } from '@ts-rest/fastify'
 import { apiContract } from '@workspace/contracts'
-import { initORM } from '../db'
-import { User } from '../../modules/user/user.entity'
-import bcrypt from 'bcrypt'
+import { initORM } from '../db.js'
+import { User } from '../../modules/user/user.entity.js'
+import bcrypt from 'bcryptjs'
 import { zUserDto } from '@workspace/data'
 import type { FastifyInstance } from 'fastify'
-import { mapUserToDto } from "../../modules/user/user.mapper";
+import { mapUserToDto } from "../../modules/user/user.mapper.js";
 
 const SALT_ROUNDS = 10
 

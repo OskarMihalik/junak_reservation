@@ -1,4 +1,4 @@
-import { User } from './user.entity';
+import { User } from './user.entity.js';
 
 export function mapUserToDto(user: User) {
   return {

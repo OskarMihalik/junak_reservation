@@ -4,7 +4,7 @@ import {
   zErrorDto,
   zResponseScheduleDto
 } from '@workspace/data'
-import { SCHEDULE_CONTRACT_PATH_PREFIX } from "../constants";
+import { SCHEDULE_CONTRACT_PATH_PREFIX } from "../constants.js";
 
 const c = initContract()
 

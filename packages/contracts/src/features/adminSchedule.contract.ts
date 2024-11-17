@@ -5,7 +5,7 @@ import {
   zRequestScheduleDto,
   zResponseScheduleDto
 } from '@workspace/data'
-import { ADMIN_SCHEDULE_CONTRACT_PATH_PREFIX } from '../constants'
+import { ADMIN_SCHEDULE_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 

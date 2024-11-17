@@ -7,7 +7,7 @@ import {
   zTokenDto,
   zUserDto,
 } from '@workspace/data'
-import { USER_CONTRACT_PATH_PREFIX } from '../constants'
+import { USER_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 
