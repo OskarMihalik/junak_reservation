@@ -49,10 +49,10 @@ export const userContractRouter = (app: FastifyInstance) => ({
       handler: async (request) => {
         request.body.password = await bcrypt.hash(request.body.password, 10)
         console.log(request.body)
-        var user = new User(false, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
-        const userCmd = db.user.create(user)
+        var user = new User(true, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
+        const userCmd = db.userCtx.create(user)
 
-        await db.user.insert(userCmd)
+        await db.userCtx.insert(userCmd)
 
         return {
           status: 201,
@@ -64,7 +64,7 @@ export const userContractRouter = (app: FastifyInstance) => ({
       handler: async (request) => {
         const body = request.body
 
-        const user = await db.user.findOne({ email: body.email })
+        const user = await db.userCtx.findOne({ email: body.email })
         if (!user) {
           return {
             status: 401,
