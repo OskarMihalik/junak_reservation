@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection } from '@mikro-orm/core'
+import { Entity, PrimaryKey, Property, Enum, OneToMany, Collection, Cascade } from "@mikro-orm/core";
 import { DaySchedule } from '../daySchedule/daySchedule.entity.js'
 
 export enum DayEnum {
@@ -19,9 +19,15 @@ export class Schedule {
   @Enum(() => DayEnum)
   day!: DayEnum;
 
-  @Property({ onCreate: () => new Date() })
-  start: Date = new Date();
+  @Property({ type: 'date' })
+  date: string;
 
-  @OneToMany(() => DaySchedule, daySchedule => daySchedule.schedule)
+  @OneToMany(() => DaySchedule, daySchedule => daySchedule.schedule, { cascade: [Cascade.PERSIST, Cascade.REMOVE], orphanRemoval: true })
   daySchedules = new Collection<DaySchedule>(this);
+
+  constructor(day: DayEnum, date: Date) {
+    this.day = day;
+    this.date = date.toISOString().split('T')[0];
+    console.log(this.date);
+  }
 }
