@@ -4,12 +4,12 @@ import type { FastifyInstance } from 'fastify'
 import { apiAdminScheduleContract } from "@workspace/contracts/src/features/adminSchedule.contract.js";
 import { zRequestScheduleDto } from '@workspace/data'
 import { DaySchedule } from '../../modules/daySchedule/daySchedule.entity.js'
-import { ScheduleService } from "../services/adminScheduleService.js";
+import { AdminScheduleService } from "../services/adminScheduleService.js";
 import { mapScheduleToResponseDto } from "../../modules/schedule/schedule.mapper.js";
 
 const s = initServer()
 const { em, userCtx, scheduleCtx } = await initORM()
-const scheduleService = new ScheduleService(em, scheduleCtx);
+const adminScheduleService = new AdminScheduleService(em, scheduleCtx);
 
 export const adminScheduleContractRouter = (app: FastifyInstance) => ({
   routes: s.router(apiAdminScheduleContract, {
@@ -27,7 +27,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
             body: { message: 'Unauthorized' },
           };
 
-        const schedules = await scheduleService.getSchedulesAsync();
+        const schedules = await adminScheduleService.getSchedulesAsync();
 
         return {
           status: 200,
@@ -50,7 +50,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
           };
 
         const { id } = request.params;
-        const schedule = await scheduleService.getScheduleByIdAsync(parseInt(id));
+        const schedule = await adminScheduleService.getScheduleByIdAsync(parseInt(id));
 
         if (!schedule) {
           return {
@@ -80,7 +80,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
           };
 
         const scheduleData = zRequestScheduleDto.parse(request.body);
-        const schedule = await scheduleService.createScheduleAsync(scheduleData);
+        const schedule = await adminScheduleService.createScheduleAsync(scheduleData);
 
         console.log(schedule);
         console.log("weee");
@@ -106,7 +106,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
 
         const { id } = request.params;
 
-        const scheduleToUpdate = await scheduleService.getScheduleByIdAsync(parseInt(id));
+        const scheduleToUpdate = await adminScheduleService.getScheduleByIdAsync(parseInt(id));
         if (!scheduleToUpdate) {
           return {
             status: 404,
@@ -122,7 +122,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
         }
 
         const scheduleData = zRequestScheduleDto.parse(request.body);
-        const schedule = await scheduleService.updateScheduleAsync(scheduleToUpdate, scheduleData);
+        const schedule = await adminScheduleService.updateScheduleAsync(scheduleToUpdate, scheduleData);
 
         return {
           status: 200,
@@ -146,7 +146,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
 
         const { id } = request.params;
 
-        const schedule = await scheduleService.getScheduleByIdAsync(parseInt(id));
+        const schedule = await adminScheduleService.getScheduleByIdAsync(parseInt(id));
         if (!schedule) {
           return {
             status: 404,
@@ -161,7 +161,7 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
           };
         }
 
-        await scheduleService.deleteScheduleByIdAsync(parseInt(id));
+        await adminScheduleService.deleteScheduleByIdAsync(parseInt(id));
 
         return {
           status: 204,

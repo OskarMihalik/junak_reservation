@@ -6,7 +6,7 @@ import { DayEnum, Schedule } from "../../modules/schedule/schedule.entity.js";
 import { DaySchedule } from "../../modules/daySchedule/daySchedule.entity.js";
 import { EntityRepository } from "@mikro-orm/sqlite";
 
-export class ScheduleService {
+export class AdminScheduleService {
   constructor(private em: EntityManager, private scheduleCtx: EntityRepository<Schedule>) {}
 
   async getSchedulesAsync() {
