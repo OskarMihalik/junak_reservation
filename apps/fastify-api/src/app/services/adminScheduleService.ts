@@ -1,5 +1,5 @@
 // apps/fastify-api/src/service/schedule.service.ts
-import { zRequestScheduleDto, zResponseScheduleDto } from '@workspace/data';
+import { zRequestScheduleDto } from '@workspace/data';
 import { EntityManager } from '@mikro-orm/core';
 import { z } from "zod";
 import { DayEnum, Schedule } from "../../modules/schedule/schedule.entity.js";

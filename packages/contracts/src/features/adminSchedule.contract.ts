@@ -1,5 +1,4 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
-import { z } from 'zod'
 import {
   zErrorDto,
   zRequestScheduleDto,
