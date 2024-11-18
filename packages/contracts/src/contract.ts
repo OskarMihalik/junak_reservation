@@ -21,7 +21,7 @@ export const apiContract = c.router(
   {
     hello: apiHelloContract,
     user: apiUserContract,
-    // adminSchedule: apiAdminScheduleContract,
+    adminSchedule: apiAdminScheduleContract,
     // adminSubscription: apiAdminSubscriptionContract,
     // schedule: apiScheduleContract,
     // subscription: apiSubscriptionContract,
