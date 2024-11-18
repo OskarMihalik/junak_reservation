@@ -1,11 +1,11 @@
 import { initServer } from '@ts-rest/fastify'
-import {initORM} from "../db";
+import {initORM} from "../db.js";
 import type {FastifyInstance} from "fastify";
 import {apiContract} from "@workspace/contracts";
-import {Subscription} from "../../modules/subscription/subscription.entity";
-import {mapSubscriptionToDto} from "../../modules/subscription/subscription.mapper";
-import {generateVariableSymbol} from "../services/subscriptionService";
-import {User} from "../../modules/user/user.entity";
+import {Subscription} from "../../modules/subscription/subscription.entity.js";
+import {mapSubscriptionToDto} from "../../modules/subscription/subscription.mapper.js";
+import {generateVariableSymbol} from "../services/subscriptionService.js";
+import {User} from "../../modules/user/user.entity.js";
 
 const s = initServer()
 const db = await initORM()
@@ -74,8 +74,8 @@ export const subscriptionContractRouter = (app: FastifyInstance) => ({
         const subscription = new Subscription(user, variableSymbol, body.subscriptionPeriod);
 
 
-        const subscriptionCmd = db.subscription.create(subscription);
-        await db.subscription.insert(subscriptionCmd);
+        const subscriptionCmd = db.subscriptionCtx.create(subscription);
+        await db.subscriptionCtx.insert(subscriptionCmd);
 
         const subscriptionDto = mapSubscriptionToDto(subscription)
 
