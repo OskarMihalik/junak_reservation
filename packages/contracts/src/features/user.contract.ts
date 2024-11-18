@@ -20,7 +20,7 @@ export const apiUserContract = c.router(
   {
     getUsers: {
       method: 'GET',
-      path: '/',
+      path: '',
       responses: {
         200: z.array(zUserDto),
         400: zErrorDto,
