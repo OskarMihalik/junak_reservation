@@ -36,3 +36,12 @@ export const zResponseScheduleDto = z.object({
       })
     ),
 })
+export const zResponseIntervalDto = z.object({
+    id: z.number().int().positive(),
+    startAt: z.string().datetime(),
+    interval: z.number().int().multipleOf(5),
+    capacity: z.number().int(),
+    currentCapacity: z.number().int(),
+    listOfAssignedUsers: z.array(z.number().int().positive()),
+    endAt: z.string().datetime(),
+})

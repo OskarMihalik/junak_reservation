@@ -1,9 +1,9 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
 import { z } from 'zod'
 import {
-  zErrorDto,
+  zErrorDto, zResponseIntervalDto,
   zResponseScheduleDto
-} from '@workspace/data'
+} from "@workspace/data";
 import { SCHEDULE_CONTRACT_PATH_PREFIX } from "../constants.js";
 
 const c = initContract()
@@ -15,45 +15,35 @@ const routerOptions: RouterOptions<typeof SCHEDULE_CONTRACT_PATH_PREFIX> = {
 
 export const apiScheduleContract = c.router(
   {
-    getAllSchedules: {
-      method: 'GET',
-      path: '/',
-      responses: {
-        200: zResponseScheduleDto.array(),
-        400: zErrorDto,
-        401: zErrorDto,
-      },
-      summary: 'Get all schedules',
-    },
-    getSchedule: {
+    getIntervalByIdAsync: {
       method: 'GET',
       path: '/:id',
       responses: {
-        200: zResponseScheduleDto,
+        200: zResponseIntervalDto,
         400: zErrorDto,
         401: zErrorDto,
         404: zErrorDto,
       },
-      summary: 'Get a specific schedule',
+      summary: 'Get a specific schedule interval',
     },
-    assignSchedule: {
+    assignScheduleAsync: {
       method: 'POST',
       path: '/assign/:id',
       body: null,
       responses: {
-        200: zResponseScheduleDto,
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
         404: zErrorDto,
       },
       summary: 'Assign schedule',
     },
-    unassignSchedule: {
+    unassignScheduleAsync: {
       method: 'POST',
       path: '/unassign/:id',
       body: null,
       responses: {
-        200: zResponseScheduleDto,
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
         404: zErrorDto,
