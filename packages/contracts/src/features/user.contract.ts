@@ -7,7 +7,7 @@ import {
   zTokenDto,
   zUserDto,
 } from '@workspace/data'
-import { USER_CONTRACT_PATH_PREFIX } from '../constants'
+import { USER_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 
@@ -20,13 +20,13 @@ export const apiUserContract = c.router(
   {
     getUsers: {
       method: 'GET',
-      path: '/',
+      path: '',
       responses: {
-        200: zUserDto.array(),
+        200: z.array(zUserDto),
         400: zErrorDto,
         401: zErrorDto,
       },
-      summary: 'Get a user',
+      summary: 'Get all users',
     },
     getUser: {
       method: 'GET',
@@ -61,9 +61,9 @@ export const apiUserContract = c.router(
     logoutUser: {
       method: 'POST',
       path: '/logout',
-      body: z.null(),
+      body: null,
       responses: {
-        200: z.null(),
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
       },

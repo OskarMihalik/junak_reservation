@@ -1,3 +1,3 @@
-export * from './lib/arrays'
-export * from './lib/errors'
-export * from './lib/type-guards'
+export * from './lib/arrays.js'
+export * from './lib/errors.js'
+export * from './lib/type-guards.js'

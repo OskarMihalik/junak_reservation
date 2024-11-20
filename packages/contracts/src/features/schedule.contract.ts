@@ -4,7 +4,7 @@ import {
   zErrorDto,
   zResponseScheduleDto
 } from '@workspace/data'
-import { SCHEDULE_CONTRACT_PATH_PREFIX } from "../constants";
+import { SCHEDULE_CONTRACT_PATH_PREFIX } from "../constants.js";
 
 const c = initContract()
 
@@ -39,7 +39,7 @@ export const apiScheduleContract = c.router(
     assignSchedule: {
       method: 'POST',
       path: '/assign/:id',
-      body: z.null(),
+      body: null,
       responses: {
         200: zResponseScheduleDto,
         400: zErrorDto,
@@ -51,7 +51,7 @@ export const apiScheduleContract = c.router(
     unassignSchedule: {
       method: 'POST',
       path: '/unassign/:id',
-      body: z.null(),
+      body: null,
       responses: {
         200: zResponseScheduleDto,
         400: zErrorDto,

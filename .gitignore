@@ -118,3 +118,7 @@ testem.log
 *.tsbuildinfo
 
 sqlite.db
+package.json
+pnpm-lock.yaml
+/db/data/*
+/apps/fastify-api/temp/*

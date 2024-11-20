@@ -1,4 +1,3 @@
-import { access } from 'fs'
 import { z } from 'zod'
 
 /**
@@ -11,6 +10,7 @@ export const DayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'])
 
 export const zRequestScheduleDto = z.object({
     day: DayEnum,
+    date: z.string().date(),
     section: z.array(
       z.object({
         startAt: z.string().datetime(),
@@ -24,6 +24,7 @@ export const zRequestScheduleDto = z.object({
 export const zResponseScheduleDto = z.object({
     id: z.number().int().positive(),
     day: DayEnum,
+    date: z.string().date(),
     section: z.array(
       z.object({
         id: z.number().int().positive(),
