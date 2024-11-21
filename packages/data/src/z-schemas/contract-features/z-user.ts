@@ -16,7 +16,7 @@ export const zUserDto = z.object({
 export const zRegisterUserDto = z.object({
   name: z.string(),
   surname: z.string(),
-  aisId: z.number().int(),
+  aisId: z.coerce.number().positive().min(1),
   email: z.string().email(),
   password: z.string(),
 })
