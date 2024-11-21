@@ -8,24 +8,8 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full">
-      <section className="w-full">
-        <Header
-          items={[
-            {
-              title: 'Home',
-              href: '/',
-            },
-            {
-              title: 'About',
-              href: '/about',
-            },
-          ]}
-        />
-      </section>
-      <section className="flex-grow flex items-center justify-center w-full">
+      <section className="flex-grow flex items-center justify-center w-full mt-2">
         {children}
       </section>
-    </div>
   )
 }

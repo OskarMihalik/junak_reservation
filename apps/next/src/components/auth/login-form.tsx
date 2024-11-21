@@ -8,8 +8,26 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
+import {useQueryClientContext} from "@/utils/providers/ReactQueryProvider";
+import {useToast} from "@/hooks/use-toast";
+import {useRouter} from "next/navigation";
 
 const LoginForm = () => {
+  const { toast } = useToast()
+  const router = useRouter()
+  const client = useQueryClientContext()
+  const { data, mutate, isPending } = client.user.loginUser.useMutation({
+    onSuccess(data, _variables, _context) {
+      if (data.status === 200) {
+        toast({ description: 'User logged successfully' })
+        router.push('/')
+      }
+    },
+    onError(_error, _variables, _context) {
+      toast({ description: 'User Login failed' })
+    },
+  })
+
 
   const form = useForm({
     resolver: zodResolver(zLoginUserDto),
@@ -20,7 +38,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof zLoginUserDto> ) => {
-    console.log(data)
+    mutate({ body: data })
   }
 
   return (
