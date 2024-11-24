@@ -8,6 +8,8 @@ export interface ResponseScheduleDto extends z.infer<typeof zResponseScheduleDto
 
 export const DayEnum = z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'])
 
+export const daysArray = DayEnum.options
+
 export const zRequestScheduleDto = z.object({
   day: DayEnum,
   date: z.string().date(),
