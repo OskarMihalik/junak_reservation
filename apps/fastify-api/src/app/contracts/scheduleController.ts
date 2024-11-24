@@ -4,10 +4,11 @@ import type { FastifyInstance } from 'fastify'
 import { ScheduleService } from "../services/scheduleService.js";
 import { apiScheduleContract } from "@workspace/contracts/src/features/schedule.contract.js";
 import { mapDayScheduleToIntervalDto } from "../../modules/daySchedule/daySchedule.mapper.js";
+import { mapScheduleToResponseDto } from '../../modules/schedule/schedule.mapper.js'
 
 const s = initServer()
-const { em, userCtx, dayScheduleCtx } = await initORM()
-const scheduleService = new ScheduleService(em, dayScheduleCtx);
+const { em, userCtx, scheduleCtx, dayScheduleCtx } = await initORM()
+const scheduleService = new ScheduleService(em, scheduleCtx, dayScheduleCtx);
 
 export const scheduleContractRouter = (app: FastifyInstance) => ({
   routes: s.router(apiScheduleContract, {
@@ -16,6 +17,14 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
         preHandler: [app.authenticate],
       },
       handler: async (request) => {
+        const userId = request.request.user.id;
+        const user = await userCtx.findOne({ id : userId});
+
+        if(!user)
+          return {
+            status: 404,
+            body: { message: 'User not found' },
+          };
         const { id } = request.params;
         const interval = await scheduleService.getIntervalByIdAsync(parseInt(id));
         console.log(interval);
@@ -28,6 +37,29 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
         return {
           status: 201,
           body: mapDayScheduleToIntervalDto(interval),
+        };
+      },
+    },
+    getWeekScheduleByDayAsync: {
+      hooks: {
+        preHandler: [app.authenticate],
+      },
+      handler: async (request) => {
+        const userId = request.request.user.id;
+        const user = await userCtx.findOne({ id : userId});
+
+        if(!user)
+          return {
+            status: 404,
+            body: { message: 'User not found' },
+          };
+
+        const day  = request.params.day;
+        const schedules = await scheduleService.getWeekScheduleByDayAsync(day);
+
+        return {
+          status: 201,
+          body: schedules.map(schedule => mapScheduleToResponseDto(schedule)),
         };
       },
     },
