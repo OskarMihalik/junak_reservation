@@ -33,10 +33,17 @@ export const userContractRouter = (app: FastifyInstance) => ({
         preHandler: [app.authenticate],
       },
       handler: async (request) => {
-        var { id }  = request.params;
+        const { id }  = request.params;
 
         const user = await db.orm.em.findOne(User, { id: parseInt(id) });
-
+        if (!user) {
+          return {
+            status: 400,
+            body: {
+              message: 'User not found',
+            },
+          }
+        }
         const userDto = mapUserToDto(user as User);
 
         return {
@@ -47,11 +54,24 @@ export const userContractRouter = (app: FastifyInstance) => ({
     },
     registerUser: {
       handler: async (request) => {
-        request.body.password = await bcrypt.hash(request.body.password, 10)
+        request.body.password = await bcrypt.hash(request.body.password, SALT_ROUNDS)
         console.log(request.body)
-        var user = new User(true, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
-        const userCmd = db.userCtx.create(user)
+        const user = new User(false, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
 
+        const existingUser = await db.userCtx.findOne({
+          $or: [{ aisId: user.aisId }, { email: user.email }],
+        });
+
+        if (existingUser) {
+          return {
+            status: 400,
+            body: {
+              message: 'User with this mail or AisID already exists',
+            },
+          };
+        }
+
+        const userCmd = db.userCtx.create(user)
         await db.userCtx.insert(userCmd)
 
         return {

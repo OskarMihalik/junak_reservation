@@ -22,9 +22,11 @@ export const apiContract = c.router(
     hello: apiHelloContract,
     user: apiUserContract,
     adminSchedule: apiAdminScheduleContract,
+    schedule: apiScheduleContract,
     // adminSubscription: apiAdminSubscriptionContract,
-    // schedule: apiScheduleContract,
     // subscription: apiSubscriptionContract,
+    // schedule: apiScheduleContract,
+    subscription: apiSubscriptionContract,
   },
   routerOptions,
 )
