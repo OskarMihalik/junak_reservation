@@ -20,6 +20,11 @@ export class AdminScheduleService {
   async createScheduleAsync(scheduleData: z.infer<typeof zRequestScheduleDto>) {
     return await this.em.transactional(async (em) => {
       try {
+        const existingSchedule = await this.scheduleCtx.findOne({ date: scheduleData.date });
+        if (existingSchedule) {
+          throw new Error('Schedule for the given date already exists');
+        }
+
         const schedule = new Schedule(
           scheduleData.day as DayEnum,
           new Date(scheduleData.date)
