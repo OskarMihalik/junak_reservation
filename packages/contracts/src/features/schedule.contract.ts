@@ -26,6 +26,20 @@ export const apiScheduleContract = c.router(
       },
       summary: 'Get a specific schedule interval',
     },
+    getWeekScheduleByDayAsync: {
+      method: 'GET',
+      path: '/week/:day',
+      pathParams: z.object({
+        day: z.coerce.date(),
+      }),
+      responses: {
+        200: zResponseScheduleDto.array(),
+        400: zErrorDto,
+        401: zErrorDto,
+        404: zErrorDto,
+      },
+      summary: 'Get a specific schedule interval',
+    },
     assignScheduleAsync: {
       method: 'POST',
       path: '/assign/:id',

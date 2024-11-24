@@ -5,6 +5,7 @@ import {
   zResponseScheduleDto
 } from '@workspace/data'
 import { ADMIN_SCHEDULE_CONTRACT_PATH_PREFIX } from '../constants.js'
+import { z } from "zod";
 
 const c = initContract()
 
@@ -45,6 +46,18 @@ export const apiAdminScheduleContract = c.router(
         404: zErrorDto,
       },
       summary: 'Create a new schedule',
+    },
+    createWeekScheduleAsync: {
+      method: 'POST',
+      path: '/week',
+      body: zRequestScheduleDto.array(),
+      responses: {
+        201: zResponseScheduleDto.array(),
+        400: zErrorDto,
+        401: zErrorDto,
+        404: zErrorDto,
+      },
+      summary: 'Get all schedules',
     },
     updateScheduleAsync: {
       method: 'PUT',
