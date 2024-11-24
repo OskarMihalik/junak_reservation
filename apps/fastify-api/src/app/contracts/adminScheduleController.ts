@@ -6,6 +6,7 @@ import { zRequestScheduleDto } from '@workspace/data'
 import { DaySchedule } from '../../modules/daySchedule/daySchedule.entity.js'
 import { AdminScheduleService } from "../services/adminScheduleService.js";
 import { mapScheduleToResponseDto } from "../../modules/schedule/schedule.mapper.js";
+import { z } from 'zod'
 
 const s = initServer()
 const { em, userCtx, scheduleCtx } = await initORM()
@@ -82,11 +83,37 @@ export const adminScheduleContractRouter = (app: FastifyInstance) => ({
         const scheduleData = zRequestScheduleDto.parse(request.body);
         const schedule = await adminScheduleService.createScheduleAsync(scheduleData);
 
-        console.log(schedule);
-        console.log("weee");
         return {
           status: 201,
           body: mapScheduleToResponseDto(schedule),
+        };
+      },
+    },
+    createWeekScheduleAsync: {
+      hooks: {
+        preHandler: [app.authenticate],
+      },
+      handler: async (request) => {
+        const userId = request.request.user.id;
+        const user = await userCtx.findOne({ id : userId});
+
+        if(!user || !(user.isAdmin))
+          return {
+            status: 401,
+            body: { message: 'Unauthorized' },
+          };
+
+        const schedulesData = z.array(zRequestScheduleDto).parse(request.body);
+        const createdSchedules = [];
+
+        for (const scheduleData of schedulesData) {
+          const schedule = await adminScheduleService.createScheduleAsync(scheduleData);
+          createdSchedules.push(mapScheduleToResponseDto(schedule));
+        }
+
+        return {
+          status: 201,
+          body: createdSchedules,
         };
       },
     },
