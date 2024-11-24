@@ -36,7 +36,14 @@ export const userContractRouter = (app: FastifyInstance) => ({
         const { id }  = request.params;
 
         const user = await db.orm.em.findOne(User, { id: parseInt(id) });
-
+        if (!user) {
+          return {
+            status: 400,
+            body: {
+              message: 'User not found',
+            },
+          }
+        }
         const userDto = mapUserToDto(user as User);
 
         return {
