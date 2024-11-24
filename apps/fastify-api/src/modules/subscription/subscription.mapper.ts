@@ -1,4 +1,4 @@
-import { Subscription } from "./subscription.entity";
+import { Subscription } from "./subscription.entity.js";
 
 export function mapSubscriptionToDto(subscription: Subscription) {
   return {
