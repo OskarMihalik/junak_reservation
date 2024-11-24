@@ -14,8 +14,8 @@ export const zRequestScheduleDto = z.object({
     section: z.array(
       z.object({
         startAt: z.string().datetime(),
-        interval: z.number().int().multipleOf(5),
-        capacity: z.number().int(),
+        interval: z.number().int().multipleOf(5).positive(),
+        capacity: z.number().int().positive(),
         endAt: z.string().datetime(),
       })
     ),
@@ -24,7 +24,7 @@ export const zRequestScheduleDto = z.object({
 export const zResponseScheduleDto = z.object({
     id: z.number().int().positive(),
     day: DayEnum,
-    date: z.string().date(),
+    date: z.coerce.date(),
     section: z.array(
       z.object({
         id: z.number().int().positive(),
