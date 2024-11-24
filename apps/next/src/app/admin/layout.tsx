@@ -12,6 +12,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               title: 'Home',
               href: '/',
             },
+            {
+              title: 'Schedule',
+              href: '/admin/createSchedule',
+            },
           ]}
         />
       </section>
