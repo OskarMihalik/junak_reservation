@@ -2,7 +2,7 @@ import { type FastifyInstance, type FastifyPluginAsync } from 'fastify'
 import { initServer } from '@ts-rest/fastify'
 import { apiContract } from '@workspace/contracts'
 import { helloContractRouter } from '../contracts/hello.js'
-import { userContractRouter } from '../contracts/user.js'
+import { userContractRouter } from '../contracts/userController.js'
 import { adminScheduleContractRouter } from "../contracts/adminScheduleController.js";
 import { scheduleContractRouter } from "../contracts/scheduleController.js";
 import {subscriptionContractRouter} from "../contracts/subscriptionController.js";
