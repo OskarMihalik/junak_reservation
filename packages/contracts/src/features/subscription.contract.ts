@@ -26,6 +26,16 @@ export const apiSubscriptionContract = c.router(
       },
       summary: 'Get all subscriptions',
     },
+    getUserSubscription: {
+      method: 'GET',
+      path: '/user',
+      responses: {
+        200: z.array(zResponseSubscriptionDto),
+        400: zErrorDto,
+        401: zErrorDto,
+      },
+      summary: 'Get subscription of authenticated user',
+    },
     getSubscription: {
       method: 'GET',
       path: '/:id',

@@ -26,6 +26,48 @@ export const subscriptionContractRouter = (app: FastifyInstance) => ({
         }
       },
     },
+    getUserSubscription: {
+      hooks: {
+        preHandler: [app.authenticate],
+      },
+      handler: async (request) => {
+        const userDto= request.request.user;
+        const user = await db.orm.em.findOne(User, { id: userDto.id });
+        if (user == null){
+          return {
+            status: 400,
+            body: {
+              message: 'User not found',
+            }
+          };
+        }
+
+        const subscriptions = await db.orm.em.find(Subscription, { user: { id: userDto.id } });
+
+        console.log("DHADUHAUDHA")
+        console.log("DHADUHAUDHA")
+        console.log("DHADUHAUDHA")
+        console.log("DHADUHAUDHA")
+
+        if (subscriptions == null){
+          return {
+            status: 400,
+            body: {
+              message: 'Subscription not found',
+            },
+          };
+        }
+
+        const subscriptionsDto = subscriptions.map(mapSubscriptionToDto);
+
+        console.log(subscriptionsDto)
+
+        return {
+          status: 200,
+          body: subscriptionsDto,
+        }
+      },
+    },
     getSubscription: {
       hooks: {
         preHandler: [app.authenticate],
