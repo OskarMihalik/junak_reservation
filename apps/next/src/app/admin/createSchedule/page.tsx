@@ -3,7 +3,7 @@ import CreateScheduleForm from '@/components/admin/createScheduleForm'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { daysArray, RequestScheduleDto, zRequestScheduleDto } from '@workspace/data'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { getWeekDays } from '@workspace/common'
 import { Button } from '@/components/ui/button'
@@ -46,10 +46,24 @@ const CreateSchedulePage = () => {
   }, [])
 
   // add checkboxes like this
-  const addCheckboxes = () => {
-    const date = currentDatesWeek[currentDatesWeek.length - 1]
+  const addNewWeek = () => {
+    const date = new Date(checkedDates[checkedDates.length - 1].date)
     date.setDate(date.getDate() + 7)
     const nextWeek = getWeekDays(date).map(date => ({ date: getDate(date), checked: false }))
+    const newDefaultValues = nextWeek.map((date, index) => ({
+      day: daysArray[index],
+      date: date.date,
+      section: [
+        {
+          startAt: new Date(date.date).toISOString(),
+          interval: 60,
+          capacity: 10,
+          endAt: new Date(date.date).toISOString(),
+        },
+      ],
+    }))
+    debugger
+    append(newDefaultValues)
     setCheckedDates([...checkedDates, ...nextWeek])
   }
 
@@ -66,8 +80,8 @@ const CreateSchedulePage = () => {
         section: [
           {
             startAt: new Date(date).toISOString(),
-            interval: 5,
-            capacity: 0,
+            interval: 60,
+            capacity: 10,
             endAt: new Date(date).toISOString(),
           },
         ],
@@ -89,13 +103,28 @@ const CreateSchedulePage = () => {
     mutate({ body: formValues })
   }
 
-  const onError = (errors, values) => {
-    // Continue submitting invalid form values
-    console.log('errors', errors)
-    console.log('values', form.getValues())
+  const onSubmit = form.handleSubmit(onValid)
+  const [page, setPage] = useState(0)
+  const [maxPage, setMaxPage] = useState(0)
+  const goNextWeek = () => {
+    if (page + 1 > maxPage) {
+      addNewWeek()
+      setMaxPage(maxPage + 1)
+    }
+    setPage(page + 1)
   }
 
-  const onSubmit = form.handleSubmit(onValid, onError)
+  const goBackWeek = () => {
+    if (page - 1 < 0) {
+      return
+    }
+    setPage(page - 1)
+  }
+
+  const showSchedule = (index: number) => {
+    const limit = 7
+    return index >= page * limit && index < (page + 1) * limit
+  }
 
   return (
     <Card className='flex-wrap'>
@@ -104,13 +133,32 @@ const CreateSchedulePage = () => {
       </CardHeader>
       <CardContent>
         <div className='flex flex-wrap'>
-          {fields.map((field, index) => (
-            <CreateScheduleForm key={field.id} form={form} scheduleIndex={index} date={currentDatesWeek[index]} />
-          ))}
+          {fields.map(
+            (field, index) =>
+              showSchedule(index) && (
+                <CreateScheduleForm
+                  key={field.id}
+                  form={form}
+                  field={field}
+                  scheduleIndex={index}
+                  setCheckbox={value => {
+                    setCheckedDates(
+                      checkedDates.map(check => (field.date === check.date ? { ...check, checked: value } : check)),
+                    )
+                  }}
+                />
+              ),
+          )}
         </div>
       </CardContent>
       <CardFooter>
         <Button onClick={onSubmit}>Create schedule</Button>
+        <div className='ml-auto'>
+          <Button onClick={goBackWeek} className='mr-5' disabled={page === 0}>
+            Go week back
+          </Button>
+          <Button onClick={goNextWeek}>Next week</Button>
+        </div>
       </CardFooter>
     </Card>
   )

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { TimePickerDemo } from '@/components/ui/timePickerDemo'
 import { RequestScheduleDto } from '@workspace/data'
 import React from 'react'
-import { useFieldArray, UseFormReturn } from 'react-hook-form'
+import { FieldArrayWithId, useFieldArray, UseFormReturn } from 'react-hook-form'
 
 export type Props = {
   form: UseFormReturn<
@@ -18,7 +18,13 @@ export type Props = {
     any,
     undefined
   >
-  date: Date
+  field: FieldArrayWithId<
+    {
+      schedules: RequestScheduleDto[]
+    },
+    'schedules',
+    'id'
+  >
   setCheckbox: (value: boolean) => void
   scheduleIndex: number
 }
@@ -40,7 +46,7 @@ const CreateScheduleForm = (props: Props) => {
               htmlFor='mon-check'
               className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
             >
-              {props.date.toDateString()}
+              {props.field.date}
             </label>
             <Checkbox id='mon-check' onCheckedChange={state => props?.setCheckbox?.(state as boolean)} />
             {fields.map((field, index) => (
