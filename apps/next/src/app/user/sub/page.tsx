@@ -9,25 +9,9 @@ import {useToast} from "@/hooks/use-toast";
 
 const subscriptionPeriodSchema = z.number().int().positive();
 
-interface SubscriptionData {
-  id: number;
-  userId: number;
-  variableSymbol: number;
-  subscriptionPeriod: number;
-  status: "WAITING" | "APPROVED" | "REVOKED" | "EXPIRED";
-  generatedAt: string;
-  approvedAt: string | null;
-  approvedBy: number | null;
-  expiresAt: string | null;
-  revokedAt: string | null;
-  revokedBy: number | null;
-}
-
-
 const SubscriptionPage: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<number | null>(null);
   const [validationMessage, setValidationMessage] = useState<string | null>(null);
-  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData[]>([]);
 
   const { toast } = useToast()
 
@@ -38,7 +22,7 @@ const SubscriptionPage: React.FC = () => {
       if (data.status === 200) {
         toast({ description: 'Subscription added successfully' })
         console.log(data.body);
-        setSubscriptionData((prevData) => [...prevData, data.body as SubscriptionData]);
+        refetch()
       }
     },
     onError() {
@@ -46,23 +30,13 @@ const SubscriptionPage: React.FC = () => {
     },
   });
 
-  const { data } = client.subscription.getUserSubscription.useQuery(['getUserSubscription']);
-
-  React.useEffect(() => {
-    if (data) {
-      console.log('Fetched subscription data:', data);
-      if (data.body && data.body.length > 0) {
-        setSubscriptionData(data.body);
-      }
-    }
-  }, [data]);
+  const { data, refetch } = client.subscription.getUserSubscription.useQuery(['getUserSubscription']);
 
   const handlePayClick = () => {
     try {
       const validatedPeriod = subscriptionPeriodSchema.parse(selectedPeriod);
       setValidationMessage(null);
       console.log(`Validated subscription period: ${validatedPeriod} month(s)`);
-
       mutate({ body: { subscriptionPeriod: validatedPeriod } });
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -72,10 +46,10 @@ const SubscriptionPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-900 text-gray-100 p-4">
-      {subscriptionData.length > 0 ? (
-        subscriptionData.map((subscription, index) => (
-          <div key={index} className="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+    <div className="flex flex-col items-center min-h-screen text-gray-200 p-4">
+      {data ? (
+        data.body.map((subscription, index) => (
+          <div key={index} className="mb-6 p-4 bg-gray-900 border border-gray-800 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold text-gray-100">Subscription Details</h2>
             <p>
               <span className="font-medium text-gray-400">Variable Symbol:</span> {subscription.variableSymbol}
@@ -88,15 +62,14 @@ const SubscriptionPage: React.FC = () => {
             <p>
               <span className="font-medium text-gray-400">Status: </span>
               <span
-                className={`
-                  ${subscription.status === 'APPROVED' ? 'text-green-500' : ''}
-                  ${subscription.status === 'WAITING' ? 'text-yellow-500' : ''}
-                  ${subscription.status === 'REVOKED' ? 'text-red-500' : ''}
-                  ${subscription.status === 'EXPIRED' ? 'text-gray-400' : ''}
-                `}
+                className={`${
+                  subscription.status === 'APPROVED' ? 'text-green-400' :
+                    subscription.status === 'WAITING' ? 'text-yellow-400' :
+                      subscription.status === 'REVOKED' ? 'text-red-400' : 'text-gray-500'
+                }`}
               >
-                {subscription.status}
-              </span>
+            {subscription.status}
+          </span>
             </p>
             <p>
               <span className="font-medium text-gray-400">Generated At:</span>{" "}
@@ -105,14 +78,13 @@ const SubscriptionPage: React.FC = () => {
           </div>
         ))
       ) : (
-        <div className="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-lg text-center">
+        <div className="mb-6 p-4 bg-gray-900 border border-gray-800 rounded-lg shadow-lg text-center">
           <h2 className="text-lg font-semibold text-gray-100">No Subscription Found</h2>
-          <p className="text-gray-400">You dont have any active subscriptions yet.</p>
+          <p className="text-gray-400">You don't have any active subscriptions yet.</p>
         </div>
       )}
 
-
-      <Card className="w-full max-w-md bg-gray-800 shadow-lg border border-gray-700">
+      <Card className="w-full max-w-md bg-gray-900 shadow-lg border border-gray-800">
         <CardHeader>
           <CardTitle className="text-xl text-center text-gray-100">
             Select Subscription Period
@@ -126,8 +98,8 @@ const SubscriptionPage: React.FC = () => {
                 variant={selectedPeriod === period ? "default" : "outline"}
                 className={`w-24 ${
                   selectedPeriod === period
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-700 text-gray-100 hover:bg-gray-600"
+                    ? "bg-blue-700 text-white hover:bg-blue-800"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
                 }`}
                 onClick={() => setSelectedPeriod(period)}
               >
@@ -150,7 +122,7 @@ const SubscriptionPage: React.FC = () => {
 
           <div className="text-center">
             <Button
-              className="w-full bg-green-600 text-white hover:bg-green-700"
+              className="w-full bg-green-700 text-white hover:bg-green-800"
               onClick={handlePayClick}
             >
               Pay
