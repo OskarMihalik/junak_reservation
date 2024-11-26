@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
 
     return webpackConfig
   },
-};
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:3939/:path*', // Proxy to Backend
+      },
+    ]
+  },
+}
 
-export default nextConfig;
+export default nextConfig
