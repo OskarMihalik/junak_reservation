@@ -44,11 +44,6 @@ export const subscriptionContractRouter = (app: FastifyInstance) => ({
 
         const subscriptions = await db.orm.em.find(Subscription, { user: { id: userDto.id } });
 
-        console.log("DHADUHAUDHA")
-        console.log("DHADUHAUDHA")
-        console.log("DHADUHAUDHA")
-        console.log("DHADUHAUDHA")
-
         if (subscriptions == null){
           return {
             status: 400,

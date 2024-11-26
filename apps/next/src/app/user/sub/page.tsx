@@ -76,11 +76,22 @@ const SubscriptionPage: React.FC = () => {
               <span className="font-medium text-gray-400">Variable Symbol:</span> {subscription.variableSymbol}
             </p>
             <p>
-              <span className="font-medium text-gray-400">Subscription Period:</span> {subscription.subscriptionPeriod}{" "}
+              <span
+                className="font-medium text-gray-400">Subscription Period:</span> {subscription.subscriptionPeriod}{" "}
               {subscription.subscriptionPeriod === 1 ? "month" : "months"}
             </p>
             <p>
-              <span className="font-medium text-gray-400">Status:</span> {subscription.status}
+              <span className="font-medium text-gray-400">Status: </span>
+              <span
+                className={`
+                  ${subscription.status === 'APPROVED' ? 'text-green-500' : ''}
+                  ${subscription.status === 'WAITING' ? 'text-yellow-500' : ''}
+                  ${subscription.status === 'REVOKED' ? 'text-red-500' : ''}
+                  ${subscription.status === 'EXPIRED' ? 'text-gray-400' : ''}
+                `}
+              >
+                {subscription.status}
+              </span>
             </p>
             <p>
               <span className="font-medium text-gray-400">Generated At:</span>{" "}
