@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQueryClientContext } from "@/utils/providers/ReactQueryProvider";
+import {useToast} from "@/hooks/use-toast";
 
 const subscriptionPeriodSchema = z.number().int().positive();
 
@@ -28,16 +29,20 @@ const SubscriptionPage: React.FC = () => {
   const [validationMessage, setValidationMessage] = useState<string | null>(null);
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData[]>([]);
 
+  const { toast } = useToast()
+
   const client = useQueryClientContext();
+
   const { mutate } = client.subscription.approveSubscription.useMutation({
     onSuccess: function (data) {
       if (data.status === 200) {
+        toast({ description: 'Subscription added successfully' })
         console.log(data.body);
         setSubscriptionData((prevData) => [...prevData, data.body as SubscriptionData]);
       }
     },
-    onError(_error) {
-      console.log(_error);
+    onError() {
+      toast({ description: 'Subscription creation failed' })
     },
   });
 
