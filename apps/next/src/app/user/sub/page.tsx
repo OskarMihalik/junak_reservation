@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const subscriptionPeriodSchema = z.number().positive();
+const subscriptionPeriodSchema = z.number().int().positive();
 
 const SubscriptionPage: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<number | null>(null);
