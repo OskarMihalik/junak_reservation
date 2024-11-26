@@ -2,7 +2,6 @@ import Fastify, { type FastifyInstance } from 'fastify'
 import { afterAll, beforeAll, test, it, expect, describe } from 'vitest'
 import { app } from '../src/app/app.js'
 import supertest from 'supertest'
-
 /**
  * Run this test file:
  *
