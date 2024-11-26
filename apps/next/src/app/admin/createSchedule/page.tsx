@@ -130,6 +130,9 @@ const CreateSchedulePage = () => {
     <Card className='flex-wrap'>
       <CardHeader>
         <CardTitle>Create schedule</CardTitle>
+        <Button onClick={onSubmit} className='ml-auto'>
+          Create schedule
+        </Button>
       </CardHeader>
       <CardContent>
         <div className='flex flex-wrap'>
@@ -152,7 +155,6 @@ const CreateSchedulePage = () => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={onSubmit}>Create schedule</Button>
         <div className='ml-auto'>
           <Button onClick={goBackWeek} className='mr-5' disabled={page === 0}>
             Go week back
