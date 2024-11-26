@@ -12,7 +12,7 @@ export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<void> {
   await fastify.register(cors, {
-    origin: ['*'],
+    origin: ['localhost:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   })
@@ -74,7 +74,7 @@ export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<v
     // add any cleanup code here to cleanup and close as required...
     // e.g. `await Promise.allSettled([...])`
 
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise(resolve => setTimeout(resolve, 10))
   }
 
   const exit = async (): Promise<void> => {
