@@ -1,16 +1,27 @@
 'use client'
 import CreateScheduleForm from '@/components/admin/createScheduleForm'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { DatePickerDemo } from '@/components/ui/datePicker'
-import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { daysArray, RequestScheduleDto, zRequestScheduleDto } from '@workspace/data'
 import React, { useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { getWeekDays } from '@workspace/common'
 import { Button } from '@/components/ui/button'
 import { useQueryClientContext } from '@/utils/providers/ReactQueryProvider'
 import { useToast } from '@/hooks/use-toast'
+import { z } from 'zod'
+
+export type CheckDate = {
+  date: string
+  checked: boolean
+}
+
+export const getDate = (date?: Date) => {
+  if (date) {
+    return date.toISOString().split('T')[0]
+  }
+  return new Date().toISOString().split('T')[0]
+}
 
 const CreateSchedulePage = () => {
   const client = useQueryClientContext()
@@ -26,148 +37,65 @@ const CreateSchedulePage = () => {
       toast({ description: 'Week creation failed' })
     },
   })
+  const [checkedDates, setCheckedDates] = React.useState<CheckDate[]>([])
 
   const currentDatesWeek = useMemo(() => {
     const weekDates = getWeekDays(new Date())
+    setCheckedDates(weekDates.map(date => ({ date: getDate(date), checked: false })))
     return weekDates
   }, [])
 
-  const [checkedMon, setCheckedMon] = React.useState(false)
-  const [checkedTue, setCheckedTue] = React.useState(false)
-  const [checkedWed, setCheckedWed] = React.useState(false)
-  const [checkedThu, setCheckedThu] = React.useState(false)
-  const [checkedFri, setCheckedFri] = React.useState(false)
-  const [checkedSat, setCheckedSat] = React.useState(false)
-  const [checkedSun, setCheckedSun] = React.useState(false)
+  // add checkboxes like this
+  const addCheckboxes = () => {
+    const date = currentDatesWeek[currentDatesWeek.length - 1]
+    date.setDate(date.getDate() + 7)
+    const nextWeek = getWeekDays(date).map(date => ({ date: getDate(date), checked: false }))
+    setCheckedDates([...checkedDates, ...nextWeek])
+  }
 
-  const formMon = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
+  const form = useForm<{ schedules: RequestScheduleDto[] }>({
+    resolver: zodResolver(
+      z.object({
+        schedules: z.array(zRequestScheduleDto),
+      }),
+    ),
     defaultValues: {
-      day: daysArray[0],
-      date: currentDatesWeek[0].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[0].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[0].toISOString(),
-        },
-      ],
+      schedules: currentDatesWeek.map((date, index) => ({
+        day: daysArray[index],
+        date: getDate(date),
+        section: [
+          {
+            startAt: new Date(date).toISOString(),
+            interval: 5,
+            capacity: 0,
+            endAt: new Date(date).toISOString(),
+          },
+        ],
+      })),
     },
   })
-  const formTue = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
-    defaultValues: {
-      day: daysArray[1],
-      date: currentDatesWeek[1].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[1].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[1].toISOString(),
-        },
-      ],
-    },
+  console.log('form', form)
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'schedules',
   })
 
-  const formWed = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
-    defaultValues: {
-      day: daysArray[2],
-      date: currentDatesWeek[2].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[2].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[2].toISOString(),
-        },
-      ],
-    },
-  })
-
-  const formThu = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
-    defaultValues: {
-      day: daysArray[3],
-      date: currentDatesWeek[3].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[3].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[3].toISOString(),
-        },
-      ],
-    },
-  })
-
-  const formFri = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
-    defaultValues: {
-      day: daysArray[4],
-      date: currentDatesWeek[4].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[4].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[4].toISOString(),
-        },
-      ],
-    },
-  })
-
-  const formSat = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
-    defaultValues: {
-      day: daysArray[5],
-      date: currentDatesWeek[5].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[5].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[5].toISOString(),
-        },
-      ],
-    },
-  })
-
-  const formSun = useForm<RequestScheduleDto>({
-    resolver: zodResolver(zRequestScheduleDto),
-    defaultValues: {
-      day: daysArray[6],
-      date: currentDatesWeek[6].toISOString(),
-      section: [
-        {
-          startAt: currentDatesWeek[6].toISOString(),
-          interval: 5,
-          capacity: 0,
-          endAt: currentDatesWeek[6].toISOString(),
-        },
-      ],
-    },
-  })
-
-  const onSubmit = () => {
-    const checked = [checkedMon, checkedTue, checkedWed, checkedThu, checkedFri, checkedSat, checkedSun]
-    const formValues = [
-      { values: formMon.getValues(), checked: checked[0] },
-      { values: formTue.getValues(), checked: checked[1] },
-      { values: formWed.getValues(), checked: checked[2] },
-      { values: formThu.getValues(), checked: checked[3] },
-      { values: formFri.getValues(), checked: checked[4] },
-      { values: formSat.getValues(), checked: checked[5] },
-      { values: formSun.getValues(), checked: checked[6] },
-    ]
-      .filter(({ checked }) => checked)
-      .map(({ values }) => ({ ...values, date: new Date(values.date).toISOString().split('T')[0] }))
+  const onValid = (data: { schedules: RequestScheduleDto[] }) => {
+    const formValues = data.schedules.filter(schedule =>
+      checkedDates.find(check => check.checked && check.date === schedule.date),
+    )
 
     console.log(formValues)
     mutate({ body: formValues })
   }
+
+  const onError = (errors, values) => {
+    // Continue submitting invalid form values
+    console.log('errors', errors)
+    console.log('values', form.getValues())
+  }
+
+  const onSubmit = form.handleSubmit(onValid, onError)
 
   return (
     <Card className='flex-wrap'>
@@ -176,13 +104,9 @@ const CreateSchedulePage = () => {
       </CardHeader>
       <CardContent>
         <div className='flex flex-wrap'>
-          <CreateScheduleForm form={formMon} date={currentDatesWeek[0]} setCheckbox={setCheckedMon} />
-          <CreateScheduleForm form={formTue} date={currentDatesWeek[1]} setCheckbox={setCheckedTue} />
-          <CreateScheduleForm form={formWed} date={currentDatesWeek[2]} setCheckbox={setCheckedWed} />
-          <CreateScheduleForm form={formThu} date={currentDatesWeek[3]} setCheckbox={setCheckedThu} />
-          <CreateScheduleForm form={formFri} date={currentDatesWeek[4]} setCheckbox={setCheckedFri} />
-          <CreateScheduleForm form={formSat} date={currentDatesWeek[5]} setCheckbox={setCheckedSat} />
-          <CreateScheduleForm form={formSun} date={currentDatesWeek[6]} setCheckbox={setCheckedSun} />
+          {fields.map((field, index) => (
+            <CreateScheduleForm key={field.id} form={form} scheduleIndex={index} date={currentDatesWeek[index]} />
+          ))}
         </div>
       </CardContent>
       <CardFooter>

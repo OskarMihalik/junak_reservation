@@ -11,9 +11,16 @@ import React from 'react'
 import { useFieldArray, UseFormReturn } from 'react-hook-form'
 
 export type Props = {
-  form: UseFormReturn<RequestScheduleDto, any, undefined>
+  form: UseFormReturn<
+    {
+      schedules: RequestScheduleDto[]
+    },
+    any,
+    undefined
+  >
   date: Date
   setCheckbox: (value: boolean) => void
+  scheduleIndex: number
 }
 
 const CreateScheduleForm = (props: Props) => {
@@ -21,7 +28,7 @@ const CreateScheduleForm = (props: Props) => {
 
   const { fields, append } = useFieldArray({
     control: props.form.control,
-    name: 'section',
+    name: `schedules.${props.scheduleIndex}.section`,
   })
 
   return (
@@ -35,12 +42,12 @@ const CreateScheduleForm = (props: Props) => {
             >
               {props.date.toDateString()}
             </label>
-            <Checkbox id='mon-check' onCheckedChange={state => props.setCheckbox(state as boolean)} />
+            <Checkbox id='mon-check' onCheckedChange={state => props?.setCheckbox?.(state as boolean)} />
             {fields.map((field, index) => (
               <div key={field.id}>
                 <FormField
                   control={form.control}
-                  name={`section.${index}.startAt`}
+                  name={`schedules.${props.scheduleIndex}.section.${index}.startAt`}
                   render={({ field, fieldState, formState }) => (
                     <FormItem>
                       <FormLabel>Start at</FormLabel>
@@ -60,7 +67,7 @@ const CreateScheduleForm = (props: Props) => {
                 />
                 <FormField
                   control={form.control}
-                  name={`section.${index}.interval`}
+                  name={`schedules.${props.scheduleIndex}.section.${index}.interval`}
                   render={({ field, fieldState, formState }) => (
                     <FormItem>
                       <FormLabel>Interval</FormLabel>
@@ -78,7 +85,7 @@ const CreateScheduleForm = (props: Props) => {
                 />
                 <FormField
                   control={form.control}
-                  name={`section.${index}.capacity`}
+                  name={`schedules.${props.scheduleIndex}.section.${index}.capacity`}
                   render={({ field, fieldState, formState }) => (
                     <FormItem>
                       <FormLabel>Capacity</FormLabel>
@@ -96,7 +103,7 @@ const CreateScheduleForm = (props: Props) => {
                 />
                 <FormField
                   control={form.control}
-                  name={`section.${index}.endAt`}
+                  name={`schedules.${props.scheduleIndex}.section.${index}.endAt`}
                   render={({ field, fieldState, formState }) => (
                     <FormItem>
                       <FormLabel>End at</FormLabel>
