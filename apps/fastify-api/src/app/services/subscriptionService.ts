@@ -24,6 +24,15 @@ export class SubscriptionService {
         (subscription.expiresAt >= now || subscription.expiresAt >= intervalBuffer);
     });
   }
+  async checkUserSubscriptionsValidityForDateAsync(userId: number, dateTime: Date) {
+    const subscriptions = await this.getUserSubscriptionsAsync(userId);
+
+    return subscriptions.filter(subscription => {
+      return subscription.status === SubscriptionStatus.APPROVED &&
+        subscription.expiresAt &&
+        subscription.expiresAt >= dateTime;
+    });
+  }
   async orderSubscriptionAsync(userId: number, aisId: number, subscriptionPeriod: number) {
     return await this.em.transactional(async (em) => {
       try {
