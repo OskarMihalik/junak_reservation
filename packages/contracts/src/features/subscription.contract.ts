@@ -3,9 +3,9 @@ import { z } from 'zod'
 import {
   zErrorDto,
   zRequestSubscriptionDto,
-  zResponseSubscriptionDto
+  zResponseSubscriptionDto,
 } from '@workspace/data'
-import { SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from "../constants.js";
+import { SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 
@@ -25,6 +25,16 @@ export const apiSubscriptionContract = c.router(
         401: zErrorDto,
       },
       summary: 'Get all subscriptions',
+    },
+    getUserSubscription: {
+      method: 'GET',
+      path: '/user',
+      responses: {
+        200: z.array(zResponseSubscriptionDto),
+        400: zErrorDto,
+        401: zErrorDto,
+      },
+      summary: 'Get subscription of authenticated user',
     },
     getSubscription: {
       method: 'GET',
