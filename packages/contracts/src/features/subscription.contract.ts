@@ -3,9 +3,9 @@ import { z } from 'zod'
 import {
   zErrorDto,
   zRequestSubscriptionDto,
-  zResponseSubscriptionDto
+  zResponseSubscriptionDto,
 } from '@workspace/data'
-import { SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from "../constants.js";
+import { SUBSCRIPTIONS_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 
