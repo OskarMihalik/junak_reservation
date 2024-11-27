@@ -5,10 +5,12 @@ import { ScheduleService } from "../services/scheduleService.js";
 import { apiScheduleContract } from "@workspace/contracts/src/features/schedule.contract.js";
 import { mapDayScheduleToIntervalDto } from "../../modules/daySchedule/daySchedule.mapper.js";
 import { mapScheduleToResponseDto } from '../../modules/schedule/schedule.mapper.js'
+import { SubscriptionService } from '../services/subscriptionService.js'
 
 const s = initServer()
-const { em, userCtx, scheduleCtx, dayScheduleCtx } = await initORM()
+const { em, userCtx, scheduleCtx, dayScheduleCtx, subscriptionCtx } = await initORM()
 const scheduleService = new ScheduleService(em, scheduleCtx, dayScheduleCtx);
+const subscriptionService = new SubscriptionService(em, userCtx, subscriptionCtx);
 
 export const scheduleContractRouter = (app: FastifyInstance) => ({
   routes: s.router(apiScheduleContract, {
@@ -77,29 +79,40 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
             body: { message: 'User not found' },
           };
 
-        //TODO check if subscribtion active
+        const validSubscriptions = await subscriptionService.checkUserSubscriptionsValidityAsync(userId);
+        if (validSubscriptions.length === 0)
+          return {
+            status: 401,
+            body: { message: 'No valid subscriptions' },
+          };
 
         const { id } = request.params;
         const interval = await scheduleService.getIntervalByIdAsync(parseInt(id));
 
-        if (!interval) {
+        if (!interval)
           return {
             status: 404,
             body: { message: 'Schedule not found' },
           };
-        }
-        if (interval.listOfAssignedUsers.includes(user.id)) {
+
+        if (interval.listOfAssignedUsers.includes(user.id))
           return {
             status: 401,
             body: { message: 'Operation unavailable: User already assigned' },
           }
-        }
-        if (interval.currentCapacity >= interval.capacity) {
+
+        if (interval.currentCapacity >= interval.capacity)
           return {
             status: 401,
             body: { message: 'Operation unavailable: Schedule is full' },
           }
-        }
+
+        const validSubscriptionsForDate = await subscriptionService.checkUserSubscriptionsValidityForDateAsync(userId, interval.startAt);
+        if (validSubscriptionsForDate.length === 0)
+          return {
+            status: 401,
+            body: { message: 'No valid subscriptions for selected date' },
+          };
 
         const result = await scheduleService.assignScheduleAsync(interval.id, user.id);
 
@@ -122,8 +135,6 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
             status: 404,
             body: { message: 'User not found' },
           };
-
-        //TODO check if subscribtion active
 
         const { id } = request.params;
         const interval = await scheduleService.getIntervalByIdAsync(parseInt(id));
