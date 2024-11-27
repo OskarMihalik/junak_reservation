@@ -1,7 +1,7 @@
 import { EntityManager } from '@mikro-orm/core'
 import { EntityRepository } from '@mikro-orm/sqlite'
 import { User } from '../../modules/user/user.entity.js'
-import { Subscription } from '../../modules/subscription/subscription.entity.js'
+import { Subscription, SubscriptionStatus } from '../../modules/subscription/subscription.entity.js'
 
 
 export class SubscriptionService {
@@ -12,6 +12,17 @@ export class SubscriptionService {
       { user: userId },
       { populate: ['user', 'approvedBy', 'revokedBy']}
     );
+  }
+  async checkUserSubscriptionsValidityAsync(userId: number) {
+    const subscriptions = await this.getUserSubscriptionsAsync(userId);
+    const now = new Date();
+    const intervalBuffer = new Date(now.getTime() - 15 * 60 * 1000); // 15 minutes before now
+
+    return subscriptions.filter(subscription => {
+      return subscription.status === SubscriptionStatus.APPROVED &&
+        subscription.expiresAt &&
+        (subscription.expiresAt >= now || subscription.expiresAt >= intervalBuffer);
+    });
   }
   async orderSubscriptionAsync(userId: number, aisId: number, subscriptionPeriod: number) {
     return await this.em.transactional(async (em) => {
