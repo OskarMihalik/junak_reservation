@@ -54,12 +54,12 @@ const SubscriptionsPage: React.FC = () => {
   const filteredSubscriptions = (data?.body || []).filter((subscription) => {
     const nameMatch =
       subscription.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      subscription.user?.surname.toLowerCase().includes(searchTerm.toLowerCase());
+      subscription.user?.surname.toLowerCase().includes(searchTerm.toLowerCase())
     const aisIdMatch = subscription.user?.aisId
       ?.toString()
-      .includes(searchTerm.toLowerCase());
-    return nameMatch || aisIdMatch;
-  });
+      .includes(searchTerm.toLowerCase())
+    return nameMatch || aisIdMatch
+  })
 
   return (
     <div className="container mx-auto p-4 text-gray-100 min-h-screen">
