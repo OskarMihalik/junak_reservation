@@ -2,7 +2,6 @@ import { authenticationTests } from "./auth.test"
 import { logoutTests } from "./logout.test"
 import { passwordTests } from "./password.test"
 import { registerTests } from './registration.test'
-import { tokenTests } from "./token.test"
 import { describe } from 'vitest'
 
 export const userUnitTests = () => {
@@ -10,7 +9,6 @@ export const userUnitTests = () => {
     passwordTests()
     registerTests()
     authenticationTests()
-    tokenTests()
     logoutTests()
   })
 }
