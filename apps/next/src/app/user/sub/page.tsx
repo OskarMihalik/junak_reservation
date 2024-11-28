@@ -17,11 +17,10 @@ const SubscriptionPage: React.FC = () => {
 
   const client = useQueryClientContext()
 
-  const { mutate } = client.subscription.approveSubscription.useMutation({
+  const { mutate } = client.subscription.orderSubscriptionAsync.useMutation({
     onSuccess: function(data) {
       if (data.status === 200) {
         toast({ description: 'Subscription added successfully' })
-        console.log(data.body)
         refetch()
       }
     },
@@ -30,7 +29,7 @@ const SubscriptionPage: React.FC = () => {
     },
   })
 
-  const { data, refetch } = client.subscription.getUserSubscription.useQuery(['getUserSubscription'])
+  const { data, refetch } = client.subscription.getUserSubscriptionsAsync.useQuery(['getUserSubscription'])
 
   const handlePayClick = () => {
     try {
