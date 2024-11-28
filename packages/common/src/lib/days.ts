@@ -14,3 +14,10 @@ export const getWeekDays = (date: Date): Date[] => {
 
   return result
 }
+
+export const getDate = (date?: Date) => {
+  if (date) {
+    return date.toISOString().split('T')[0]
+  }
+  return new Date().toISOString().split('T')[0]
+}

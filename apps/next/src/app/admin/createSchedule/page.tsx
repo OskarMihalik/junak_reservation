@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { daysArray, RequestScheduleDto, zRequestScheduleDto } from '@workspace/data'
 import React, { useMemo, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import { getWeekDays } from '@workspace/common'
+import { getDate, getWeekDays } from '@workspace/common'
 import { Button } from '@/components/ui/button'
 import { useQueryClientContext } from '@/utils/providers/ReactQueryProvider'
 import { useToast } from '@/hooks/use-toast'
@@ -14,13 +14,6 @@ import { z } from 'zod'
 export type CheckDate = {
   date: string
   checked: boolean
-}
-
-export const getDate = (date?: Date) => {
-  if (date) {
-    return date.toISOString().split('T')[0]
-  }
-  return new Date().toISOString().split('T')[0]
 }
 
 const CreateSchedulePage = () => {
