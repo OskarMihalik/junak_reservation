@@ -1,10 +1,33 @@
 'use client'
 import React from 'react'
 import { useQueryClientContext } from '@/utils/providers/ReactQueryProvider'
+import { useToast } from '@/hooks/use-toast'
 
 const SubscriptionsPage: React.FC = () => {
   const client = useQueryClientContext()
-  const { data } = client.adminSubscription.getSubscriptionsAsync.useQuery(['getSubscriptionsAsync'])
+  const { toast } = useToast()
+
+  const { data, refetch } = client.adminSubscription.getSubscriptionsAsync.useQuery(['getSubscriptionsAsync'])
+
+  const { mutate } = client.adminSubscription.approveSubscriptionAsync.useMutation({
+    onSuccess: function(data) {
+      if (data.status == 200) {
+        toast({ description: 'Subscription approved' })
+        refetch()
+      }
+    },
+    onError: () => {
+      toast({ description: 'Subscription failed to approve' })
+    },
+  })
+  const handleApprove = (id: number) => {
+    console.log(`Approve ID: ${id}`)
+    mutate({ params: { id: id.toString() } })
+  }
+
+  const handleRevoke = (id: number) => {
+    console.log(`Revoke ID: ${id}`)
+  }
 
   return (
     <div className="container mx-auto p-4 text-gray-100 min-h-screen">
@@ -23,7 +46,7 @@ const SubscriptionsPage: React.FC = () => {
           </thead>
           <tbody>
           {data.body.map((subscription, index) => (
-            <tr key={subscription.id || index} className="even:bg-gray-850 hover:bg-gray-700">
+            <tr key={subscription.id || index} className="even:bg-gray-850 hover:bg-gray-600">
               <td className="border border-gray-700 px-4 py-3">
                 {subscription.user ? `${subscription.user.name} ${subscription.user.surname}` : 'N/A'}
               </td>
@@ -34,10 +57,16 @@ const SubscriptionsPage: React.FC = () => {
               <td className="border border-gray-700 px-4 py-3">{subscription.subscriptionPeriod}</td>
               <td className="border border-gray-700 px-4 py-3 capitalize">{subscription.status}</td>
               <td className="border border-gray-700 px-4 py-3 text-center">
-                <button className="mr-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                <button
+                  onClick={() => handleApprove(subscription.id)}
+                  className="mr-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                >
                   Approve
                 </button>
-                <button className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                <button
+                  onClick={() => handleRevoke(subscription.id)}
+                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                >
                   Revoke
                 </button>
               </td>
