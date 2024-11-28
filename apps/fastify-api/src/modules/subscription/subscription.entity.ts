@@ -53,7 +53,8 @@ export class Subscription {
     this.status = SubscriptionStatus.APPROVED;
     this.approvedAt = new Date();
     this.approvedBy = user;
-    this.expiresAt = new Date(Date.now() + this.subscriptionPeriod * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    this.expiresAt = new Date(now.setMonth(now.getMonth() + this.subscriptionPeriod));
   }
 
   revoke(user: User) {
