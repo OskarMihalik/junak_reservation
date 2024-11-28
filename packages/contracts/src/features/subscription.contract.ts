@@ -16,48 +16,26 @@ const routerOptions: RouterOptions<typeof SUBSCRIPTIONS_CONTRACT_PATH_PREFIX> = 
 
 export const apiSubscriptionContract = c.router(
   {
-    getAllSubscriptions: {
+    getUserSubscriptionsAsync: {
       method: 'GET',
       path: '',
       responses: {
-        200: z.array(zResponseSubscriptionDto),
+        200: zResponseSubscriptionDto.array(),
         400: zErrorDto,
         401: zErrorDto,
       },
-      summary: 'Get all subscriptions',
+      summary: 'Get subscriptions of authenticated user',
     },
-    getUserSubscription: {
-      method: 'GET',
-      path: '/user',
-      responses: {
-        200: z.array(zResponseSubscriptionDto),
-        400: zErrorDto,
-        401: zErrorDto,
-      },
-      summary: 'Get subscription of authenticated user',
-    },
-    getSubscription: {
-      method: 'GET',
-      path: '/:id',
-      responses: {
-        200: zResponseSubscriptionDto,
-        400: zErrorDto,
-        401: zErrorDto,
-        404: zErrorDto,
-      },
-      summary: 'Get a specific subscription',
-    },
-    approveSubscription: {
+    orderSubscriptionAsync: {
       method: 'POST',
       path: '/pay',
       body: zRequestSubscriptionDto,
       responses: {
-        200: zResponseSubscriptionDto,
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
-        404: zErrorDto,
       },
-      summary: 'Generate variable symbol for payment',
+      summary: 'Order and generate variable symbol for subscription payment',
     },
   },
   routerOptions,
