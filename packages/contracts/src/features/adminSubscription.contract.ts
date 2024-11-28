@@ -15,9 +15,9 @@ const routerOptions: RouterOptions<typeof ADMIN_SUBSCRIPTIONS_CONTRACT_PATH_PREF
 
 export const apiAdminSubscriptionContract = c.router(
   {
-    getAllSubscriptions: {
+    getSubscriptionsAsync: {
       method: 'GET',
-      path: '/',
+      path: '',
       responses: {
         200: zResponseSubscriptionDto.array(),
         400: zErrorDto,
@@ -25,7 +25,7 @@ export const apiAdminSubscriptionContract = c.router(
       },
       summary: 'Get all subscriptions',
     },
-    getSubscription: {
+    getSubscriptionByIdAsync: {
       method: 'GET',
       path: '/:id',
       responses: {
@@ -36,24 +36,24 @@ export const apiAdminSubscriptionContract = c.router(
       },
       summary: 'Get a specific subscription',
     },
-    approveSubscription: {
+    approveSubscriptionAsync: {
       method: 'POST',
       path: '/approve/:id',
       body: null,
       responses: {
-        200: zResponseSubscriptionDto,
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
         404: zErrorDto,
       },
       summary: 'Approve subscription',
     },
-    revokeSubscription: {
+    revokeSubscriptionAsync: {
       method: 'POST',
       path: '/revoke/:id',
       body: null,
       responses: {
-        200: zResponseSubscriptionDto,
+        200: z.string(),
         400: zErrorDto,
         401: zErrorDto,
         404: zErrorDto,

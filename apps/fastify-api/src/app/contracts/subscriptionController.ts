@@ -1,87 +1,60 @@
 import { initServer } from '@ts-rest/fastify'
-import {initORM} from "../db.js";
-import type {FastifyInstance} from "fastify";
-import {apiContract} from "@workspace/contracts";
-import {Subscription} from "../../modules/subscription/subscription.entity.js";
-import {mapSubscriptionToDto} from "../../modules/subscription/subscription.mapper.js";
-import {generateVariableSymbol} from "../services/subscriptionService.js";
-import {User} from "../../modules/user/user.entity.js";
+import { initORM } from '../db.js'
+import type { FastifyInstance } from 'fastify'
+import { mapSubscriptionToDto } from '../../modules/subscription/subscription.mapper.js'
+import { SubscriptionService } from '../services/subscriptionService.js'
+import { apiSubscriptionContract } from '@workspace/contracts/src/features/subscription.contract.js'
+import { zRequestSubscriptionDto } from '@workspace/data'
 
 const s = initServer()
-const db = await initORM()
+const { em, userCtx, subscriptionCtx } = await initORM()
+const subscriptionService = new SubscriptionService(em, userCtx, subscriptionCtx);
 
 export const subscriptionContractRouter = (app: FastifyInstance) => ({
-  routes: s.router(apiContract.subscription, {
-    getAllSubscriptions: {
-      hooks: {
-        preHandler: [app.authenticate],
-      },
-      handler: async () => {
-        const subscriptions = await db.orm.em.find(Subscription, {});
-        const subscriptionsDto = subscriptions.map(mapSubscriptionToDto);
-
-        return {
-          status: 200,
-          body: subscriptionsDto,
-        }
-      },
-    },
-    getSubscription: {
+  routes: s.router(apiSubscriptionContract, {
+    getUserSubscriptionsAsync: {
       hooks: {
         preHandler: [app.authenticate],
       },
       handler: async (request) => {
-        const {id} = request.params;
+        const userId = request.request.user.id
+        const user = await userCtx.findOne({ id: userId })
 
-        const subscription = await db.orm.em.findOne(Subscription, {id: parseInt(id)});
-
-        if (subscription == null){
+        if(!user)
           return {
-            status: 400,
-            body: {
-              message: 'Subscription not found',
-            },
+            status: 404,
+            body: { message: 'User not found' },
           };
-        }
+        console.log("WEEE");
 
-        const subscriptionDto = mapSubscriptionToDto(subscription as Subscription);
-
+        const subscriptions = await subscriptionService.getUserSubscriptionsAsync(user.id);
+        console.log(subscriptions);
         return {
           status: 200,
-          body: subscriptionDto,
+          body: subscriptions.map(subscription => mapSubscriptionToDto(subscription)),
         }
       },
     },
-    approveSubscription: {
+    orderSubscriptionAsync: {
       hooks: {
         preHandler: [app.authenticate],
       },
       handler: async (request) => {
-        const userDto= request.request.user;
-        const user = await db.orm.em.findOne(User, { id: userDto.id });
-        if (user == null){
+        const userId = request.request.user.id
+        const user = await userCtx.findOne({ id: userId })
+
+        if(!user)
           return {
-            status: 400,
-            body: {
-              message: 'User not found',
-            }
+            status: 404,
+            body: { message: 'User not found' },
           };
-        }
 
-        const body = request.body;
-
-        const variableSymbol = generateVariableSymbol(user.aisId, body.subscriptionPeriod);
-        const subscription = new Subscription(user, variableSymbol, body.subscriptionPeriod);
-
-
-        const subscriptionCmd = db.subscriptionCtx.create(subscription);
-        await db.subscriptionCtx.insert(subscriptionCmd);
-
-        const subscriptionDto = mapSubscriptionToDto(subscription)
+        const subscriptionData = zRequestSubscriptionDto.parse(request.body);
+        const subscription = await subscriptionService.orderSubscriptionAsync(user.id, user.aisId, subscriptionData.subscriptionPeriod);
 
         return {
           status: 200,
-          body: subscriptionDto,
+          body: "Subscription ordered",
         }
       },
     },
