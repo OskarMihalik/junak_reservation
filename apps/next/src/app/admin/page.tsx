@@ -1,7 +1,7 @@
-import React from 'react'
+import UserCalendar from '@/components/ui/userCalendar'
 
 const adminHomePage = () => {
-  return <div>uga bga</div>
+  return <UserCalendar />
 }
 
 export default adminHomePage

@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           items={[
             {
               title: 'Home',
-              href: '/',
+              href: '/admin',
             },
             {
               title: 'Schedule',
