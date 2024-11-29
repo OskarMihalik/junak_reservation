@@ -1,13 +1,7 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
 import { z } from 'zod'
-import {
-  zErrorDto,
-  zLoginUserDto,
-  zRegisterUserDto,
-  zTokenDto,
-  zUserDto,
-} from '@workspace/data'
-import { USER_CONTRACT_PATH_PREFIX } from '../constants'
+import { zErrorDto, zLoginUserDto, zRegisterUserDto, zUserDto } from '@workspace/data'
+import { USER_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 
@@ -20,7 +14,7 @@ export const apiUserContract = c.router(
   {
     getUsers: {
       method: 'GET',
-      path: '/',
+      path: '',
       responses: {
         200: z.array(zUserDto),
         400: zErrorDto,
@@ -53,7 +47,7 @@ export const apiUserContract = c.router(
       path: '/login',
       body: zLoginUserDto,
       responses: {
-        200: zTokenDto,
+        200: zUserDto,
         400: zErrorDto,
         401: zErrorDto,
       },

@@ -1,11 +1,11 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
-import { z } from 'zod'
 import {
   zErrorDto,
   zRequestScheduleDto,
   zResponseScheduleDto
 } from '@workspace/data'
-import { ADMIN_SCHEDULE_CONTRACT_PATH_PREFIX } from '../constants'
+import { ADMIN_SCHEDULE_CONTRACT_PATH_PREFIX } from '../constants.js'
+import { z } from "zod";
 
 const c = initContract()
 
@@ -16,16 +16,16 @@ const routerOptions: RouterOptions<typeof ADMIN_SCHEDULE_CONTRACT_PATH_PREFIX> =
 
 export const apiAdminScheduleContract = c.router(
   {
-    getAllSchedules: {
+    getSchedulesAsync: {
       method: 'GET',
-      path: '/',
+      path: '',
       responses: {
         200: zResponseScheduleDto.array(),
         401: zErrorDto,
       },
       summary: 'Get all schedules',
     },
-    getSchedule: {
+    getScheduleByIdAsync: {
       method: 'GET',
       path: '/:id',
       responses: {
@@ -35,32 +35,48 @@ export const apiAdminScheduleContract = c.router(
       },
       summary: 'Get a specific schedule',
     },
-    createSchedule: {
+    createScheduleAsync: {
       method: 'POST',
-      path: '/',
+      path: '',
       body: zRequestScheduleDto,
       responses: {
         201: zResponseScheduleDto,
         400: zErrorDto,
+        401: zErrorDto,
+        404: zErrorDto,
       },
       summary: 'Create a new schedule',
     },
-    updateSchedule: {
+    createWeekScheduleAsync: {
+      method: 'POST',
+      path: '/week',
+      body: zRequestScheduleDto.array(),
+      responses: {
+        201: zResponseScheduleDto.array(),
+        400: zErrorDto,
+        401: zErrorDto,
+        404: zErrorDto,
+      },
+      summary: 'Get all schedules',
+    },
+    updateScheduleAsync: {
       method: 'PUT',
       path: '/:id',
       body: zRequestScheduleDto,
       responses: {
         200: zResponseScheduleDto,
         400: zErrorDto,
+        401: zErrorDto,
         404: zErrorDto,
       },
       summary: 'Update a specific schedule',
     },
-    deleteSchedule: {
+    deleteScheduleByIdAsync: {
       method: 'DELETE',
       path: '/:id',
       responses: {
-        204: z.string(),
+        204: null,
+        400: zErrorDto,
         401: zErrorDto,
         404: zErrorDto,
       },

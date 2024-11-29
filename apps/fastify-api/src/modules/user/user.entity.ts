@@ -8,6 +8,7 @@ export class User {
   @Property()
   isAdmin!: boolean
 
+  @Unique()
   @Property()
   aisId!: number
 

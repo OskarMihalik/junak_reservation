@@ -8,8 +8,9 @@ import { useState } from 'react'
 import React, { createContext, useContext } from 'react'
 
 const baseSettings = {
-  baseUrl: 'http://localhost:3939',
+  baseUrl: '/api',
   baseHeaders: {},
+  credentials: 'include' as RequestCredentials,
 }
 
 const QueryClientContext = createContext<TsRestReactQueryClient<typeof apiContract, typeof baseSettings> | null>(null)

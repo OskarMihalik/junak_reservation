@@ -1,78 +1,60 @@
 import { initServer } from '@ts-rest/fastify'
-import {initORM} from "../db";
-import type {FastifyInstance} from "fastify";
-import {apiContract} from "@workspace/contracts";
-import {Subscription} from "../../modules/subscription/subscription.entity";
-import {mapSubscriptionToDto} from "../../modules/subscription/subscription.mapper";
-import {zRequestSubscriptionDto, zResponseSubscriptionDto} from "@workspace/data";
-import {generateVariableSymbol} from "../services/subscriptionService";
+import { initORM } from '../db.js'
+import type { FastifyInstance } from 'fastify'
+import { mapSubscriptionToDto } from '../../modules/subscription/subscription.mapper.js'
+import { SubscriptionService } from '../services/subscriptionService.js'
+import { apiSubscriptionContract } from '@workspace/contracts/src/features/subscription.contract.js'
+import { zRequestSubscriptionDto } from '@workspace/data'
 
 const s = initServer()
-const db = await initORM()
+const { em, userCtx, subscriptionCtx } = await initORM()
+const subscriptionService = new SubscriptionService(em, userCtx, subscriptionCtx);
 
 export const subscriptionContractRouter = (app: FastifyInstance) => ({
-  routes: s.router(apiContract.subscription, {
-    getAllSubscriptions: {
-      hooks: {
-        preHandler: [app.authenticate],
-      },
-      handler: async () => {
-        const subscriptions = await db.orm.em.find(Subscription, {});
-        const subscriptionsDto = subscriptions.map(mapSubscriptionToDto);
-
-        return {
-          status: 200,
-          body: subscriptionsDto,
-        }
-      },
-    },
-    getSubscription: {
+  routes: s.router(apiSubscriptionContract, {
+    getUserSubscriptionsAsync: {
       hooks: {
         preHandler: [app.authenticate],
       },
       handler: async (request) => {
-        const {id} = request.params;
+        const userId = request.request.user.id
+        const user = await userCtx.findOne({ id: userId })
 
-        const subscription = await db.orm.em.findOne(Subscription, {id: parseInt(id)});
-        const subscriptionDto = mapSubscriptionToDto(subscription as Subscription);
-
-        return {
-          status: 200,
-          body: subscriptionDto,
-        }
-      },
-    },
-    approveSubscription: {
-      hooks: {
-        preHandler: [app.authenticate],
-      },
-      handler: async (request) => {
-        const authorizationHeader = request.headers.authorization;
-        if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+        if(!user)
           return {
-            status: 401,
-            body: {
-              message: 'Unauthorized: No token provided'
-            },
+            status: 404,
+            body: { message: 'User not found' },
           };
+        console.log("WEEE");
+
+        const subscriptions = await subscriptionService.getUserSubscriptionsAsync(user.id);
+        console.log(subscriptions);
+        return {
+          status: 200,
+          body: subscriptions.map(subscription => mapSubscriptionToDto(subscription)),
         }
-        // const token = authorizationHeader.split(' ')[1]!;
-        // const user = request.request.jwt.verify(token);
+      },
+    },
+    orderSubscriptionAsync: {
+      hooks: {
+        preHandler: [app.authenticate],
+      },
+      handler: async (request) => {
+        const userId = request.request.user.id
+        const user = await userCtx.findOne({ id: userId })
 
-        const body = request.body;
+        if(!user)
+          return {
+            status: 404,
+            body: { message: 'User not found' },
+          };
 
-        const subscription = new Subscription();
-        subscription.subscriptionPeriod = body.subscriptionPeriod;
-        subscription.variableSymbol = generateVariableSymbol(subscription.subscriptionPeriod);
-
-        const subscriptionCmd = db.subscription.create(subscription);
-        await db.subscription.insert(subscriptionCmd);
-
-        const parsedSubscription = zResponseSubscriptionDto.parse(subscription)
+        const subscriptionData = zRequestSubscriptionDto.parse(request.body);
+        const subscription = await subscriptionService.orderSubscriptionAsync(user.id, user.aisId, subscriptionData.subscriptionPeriod);
 
         return {
           status: 200,
-          body: parsedSubscription,
+          body: "Subscription ordered",
         }
       },
     },

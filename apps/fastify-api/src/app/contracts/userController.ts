@@ -1,11 +1,11 @@
 import { initServer } from '@ts-rest/fastify'
 import { apiContract } from '@workspace/contracts'
-import { initORM } from '../db'
-import { User } from '../../modules/user/user.entity'
-import bcrypt from 'bcrypt'
+import { initORM } from '../db.js'
+import { User } from '../../modules/user/user.entity.js'
+import bcrypt from 'bcryptjs'
 import { zUserDto } from '@workspace/data'
 import type { FastifyInstance } from 'fastify'
-import { mapUserToDto } from "../../modules/user/user.mapper";
+import { mapUserToDto } from '../../modules/user/user.mapper.js'
 
 const SALT_ROUNDS = 10
 
@@ -19,25 +19,32 @@ export const userContractRouter = (app: FastifyInstance) => ({
         preHandler: [app.authenticate],
       },
       handler: async () => {
-        const users = await db.orm.em.find(User, {});
-        const usersDto = users.map(mapUserToDto);
+        const users = await db.orm.em.find(User, {})
+        const usersDto = users.map(mapUserToDto)
 
         return {
           status: 200,
           body: usersDto,
-        };
+        }
       },
     },
     getUser: {
       hooks: {
         preHandler: [app.authenticate],
       },
-      handler: async (request) => {
-        var { id }  = request.params;
+      handler: async request => {
+        const { id } = request.params
 
-        const user = await db.orm.em.findOne(User, { id: parseInt(id) });
-
-        const userDto = mapUserToDto(user as User);
+        const user = await db.orm.em.findOne(User, { id: parseInt(id) })
+        if (!user) {
+          return {
+            status: 400,
+            body: {
+              message: 'User not found',
+            },
+          }
+        }
+        const userDto = mapUserToDto(user as User)
 
         return {
           status: 200,
@@ -46,13 +53,33 @@ export const userContractRouter = (app: FastifyInstance) => ({
       },
     },
     registerUser: {
-      handler: async (request) => {
+      handler: async request => {
         request.body.password = await bcrypt.hash(request.body.password, SALT_ROUNDS)
         console.log(request.body)
-        var user = new User(false, request.body.aisId, request.body.name, request.body.surname, request.body.email, request.body.password)
-        const userCmd = db.user.create(user)
+        const user = new User(
+          false,
+          request.body.aisId,
+          request.body.name,
+          request.body.surname,
+          request.body.email,
+          request.body.password,
+        )
 
-        await db.user.insert(userCmd)
+        const existingUser = await db.userCtx.findOne({
+          $or: [{ aisId: user.aisId }, { email: user.email }],
+        })
+
+        if (existingUser) {
+          return {
+            status: 400,
+            body: {
+              message: 'User with this mail or AisID already exists',
+            },
+          }
+        }
+
+        const userCmd = db.userCtx.create(user)
+        await db.userCtx.insert(userCmd)
 
         return {
           status: 201,
@@ -61,10 +88,10 @@ export const userContractRouter = (app: FastifyInstance) => ({
       },
     },
     loginUser: {
-      handler: async (request) => {
+      handler: async request => {
         const body = request.body
 
-        const user = await db.user.findOne({ email: body.email })
+        const user = await db.userCtx.findOne({ email: body.email })
         if (!user) {
           return {
             status: 401,
@@ -95,9 +122,7 @@ export const userContractRouter = (app: FastifyInstance) => ({
 
         return {
           status: 200,
-          body: {
-            accessToken: token,
-          },
+          body: parsedUser,
         }
       },
     },
@@ -105,9 +130,8 @@ export const userContractRouter = (app: FastifyInstance) => ({
       hooks: {
         preHandler: [app.authenticate],
       },
-      handler: async (request) => {
+      handler: async request => {
         request.reply.clearCookie('access_token')
-
 
         return {
           status: 200,

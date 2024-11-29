@@ -1,6 +1,6 @@
 import Fastify, { type FastifyInstance } from 'fastify'
 import { app } from './app/app.js'
-import { MikroORM, RequestContext } from '@mikro-orm/core'
+import { SubscriptionValidator } from './app/utils/subscriptionValidator.js'
 
 export const HOST = process.env.HOST ?? 'localhost'
 export const PORT = process.env.PORT ? Number(process.env.PORT) : 3939
@@ -11,9 +11,7 @@ const start = async (): Promise<void> => {
   try {
     await fastifyInstance.ready()
 
-    // debug helpers --
-    // console.info(fastify.printPlugins())
-    // console.info(fastify.printRoutes())
+    await SubscriptionValidator.checkAndExpireSubscriptionsAsync();
 
     await fastifyInstance.listen({ host: HOST, port: PORT })
   } catch (error: unknown) {

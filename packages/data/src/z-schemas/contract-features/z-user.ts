@@ -1,4 +1,3 @@
-import { access } from 'fs'
 import { z } from 'zod'
 
 /**
@@ -12,12 +11,13 @@ export const zUserDto = z.object({
   surname: z.string(),
   aisId: z.number().int(),
   email: z.string().email(),
+  isAdmin: z.boolean(),
 })
 
 export const zRegisterUserDto = z.object({
   name: z.string(),
   surname: z.string(),
-  aisId: z.number().int(),
+  aisId: z.coerce.number().positive().min(1),
   email: z.string().email(),
   password: z.string(),
 })
@@ -25,8 +25,4 @@ export const zRegisterUserDto = z.object({
 export const zLoginUserDto = z.object({
   email: z.string().email(),
   password: z.string(),
-})
-
-export const zTokenDto = z.object({
-  accessToken: z.string(),
 })

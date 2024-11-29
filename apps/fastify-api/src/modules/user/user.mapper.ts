@@ -1,4 +1,4 @@
-import { User } from './user.entity';
+import { User } from './user.entity.js'
 
 export function mapUserToDto(user: User) {
   return {
@@ -7,5 +7,6 @@ export function mapUserToDto(user: User) {
     surname: user.surname,
     aisId: user.aisId,
     email: user.email,
-  };
+    isAdmin: user.isAdmin,
+  }
 }

@@ -1,7 +1,7 @@
 import { initContract, type RouterOptions } from '@ts-rest/core'
 import { z } from 'zod'
 import { zHelloDto, zUuidParams } from '@workspace/data'
-import { HELLO_CONTRACT_PATH_PREFIX } from '../constants'
+import { HELLO_CONTRACT_PATH_PREFIX } from '../constants.js'
 
 const c = initContract()
 

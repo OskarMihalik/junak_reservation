@@ -1,10 +1,10 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import sensiblePlugin from './plugins/sensible'
-import rootRoute from './routes/root'
-import contractRoutes from './routes/contract'
+import sensiblePlugin from './plugins/sensible.js'
+import rootRoute from './routes/root.js'
+import contractRoutes from './routes/contract.js'
 import cors from '@fastify/cors'
 import { MikroORM, RequestContext } from '@mikro-orm/core'
-import { initORM } from './db'
+import { initORM } from './db.js'
 import fjwt, { type FastifyJWT } from '@fastify/jwt'
 import fCookie from '@fastify/cookie'
 
@@ -12,7 +12,7 @@ export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<void> {
   await fastify.register(cors, {
-    origin: ['*'],
+    origin: ['localhost:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   })
@@ -74,7 +74,7 @@ export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<v
     // add any cleanup code here to cleanup and close as required...
     // e.g. `await Promise.allSettled([...])`
 
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise(resolve => setTimeout(resolve, 10))
   }
 
   const exit = async (): Promise<void> => {

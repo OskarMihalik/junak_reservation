@@ -11,10 +11,10 @@ import { DaySchedule as DayScheduleClass} from '../modules/daySchedule/daySchedu
 export interface Services {
   orm: MikroORM;
   em: EntityManager;
-  user: EntityRepository<User>;
-  subscription: EntityRepository<Subscription>;
-  schedule: EntityRepository<Schedule>;
-  daySchedule: EntityRepository<DaySchedule>;
+  userCtx: EntityRepository<User>;
+  subscriptionCtx: EntityRepository<Subscription>;
+  scheduleCtx: EntityRepository<Schedule>;
+  dayScheduleCtx: EntityRepository<DaySchedule>;
 }
 let cache: Services
 
@@ -29,9 +29,9 @@ export async function initORM(options?: Options): Promise<Services> {
   return (cache = {
     orm,
     em: orm.em,
-    user: orm.em.getRepository(UserClass),
-    subscription: orm.em.getRepository(SubscriptionClass),
-    schedule: orm.em.getRepository(ScheduleClass),
-    daySchedule: orm.em.getRepository(DayScheduleClass)
+    userCtx: orm.em.getRepository(UserClass),
+    subscriptionCtx: orm.em.getRepository(SubscriptionClass),
+    scheduleCtx: orm.em.getRepository(ScheduleClass),
+    dayScheduleCtx: orm.em.getRepository(DayScheduleClass)
   })
 }

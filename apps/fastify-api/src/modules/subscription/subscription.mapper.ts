@@ -1,17 +1,18 @@
-import { Subscription } from "./subscription.entity";
+import { Subscription } from "./subscription.entity.js";
+import { mapUserToDto } from '../user/user.mapper.js'
 
 export function mapSubscriptionToDto(subscription: Subscription) {
   return {
     id: subscription.id,
-    userId: subscription.user.id,
+    user: mapUserToDto(subscription.user),
     variableSymbol: subscription.variableSymbol,
     subscriptionPeriod: subscription.subscriptionPeriod,
     status: subscription.status,
-    generatedAt: subscription.generatedAt.toDateString(),
-    approvedAt: subscription.approvedAt?.toDateString() ?? "N/A",
-    approvedBy: subscription.approvedBy ?? null,
-    expiresAt: subscription.expiresAt?.toDateString() ?? "N/A",
-    revokedAt: subscription.revokedAt?.toDateString() ?? "N/A",
-    revokedBy: subscription.revokedBy ?? null,
+    generatedAt: subscription.generatedAt.toISOString(),
+    approvedAt: subscription.approvedAt?.toISOString() ?? null,
+    approvedBy: subscription.approvedBy ? mapUserToDto(subscription.approvedBy) : null,
+    expiresAt: subscription.expiresAt?.toISOString() ?? null,
+    revokedAt: subscription.revokedAt?.toISOString() ?? null,
+    revokedBy: subscription.revokedBy ? mapUserToDto(subscription.revokedBy) : null,
   }
 }
