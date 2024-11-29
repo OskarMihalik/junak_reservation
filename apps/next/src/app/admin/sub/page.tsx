@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useQueryClientContext } from '@/utils/providers/ReactQueryProvider'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
@@ -51,15 +51,17 @@ const SubscriptionsPage: React.FC = () => {
   const APPROVED = SubscriptionStatusEnum.options[1]
   const REVOKED = SubscriptionStatusEnum.options[2]
 
-  const filteredSubscriptions = (data?.body || []).filter((subscription) => {
-    const nameMatch =
-      subscription.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      subscription.user?.surname.toLowerCase().includes(searchTerm.toLowerCase())
-    const aisIdMatch = subscription.user?.aisId
-      ?.toString()
-      .includes(searchTerm.toLowerCase())
-    return nameMatch || aisIdMatch
-  })
+  const filteredSubscriptions = useMemo(() => {
+    return (data?.body || []).filter((subscription) => {
+      const nameMatch =
+        subscription.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        subscription.user?.surname.toLowerCase().includes(searchTerm.toLowerCase())
+      const aisIdMatch = subscription.user?.aisId
+        ?.toString()
+        .includes(searchTerm.toLowerCase())
+      return nameMatch || aisIdMatch
+    })
+  }, [data?.body, searchTerm])
 
   return (
     <div className="container mx-auto p-4 text-gray-100 min-h-screen">
