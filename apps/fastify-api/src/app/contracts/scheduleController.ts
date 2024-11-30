@@ -37,7 +37,7 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
           };
         }
         return {
-          status: 201,
+          status: 200,
           body: mapDayScheduleToIntervalDto(interval),
         };
       },
@@ -59,9 +59,11 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
         const day  = request.params.day;
         const schedules = await scheduleService.getWeekScheduleByDayAsync(day);
 
+        const response = schedules.map(schedule => mapScheduleToResponseDto(schedule, user.id));
+
         return {
-          status: 201,
-          body: schedules.map(schedule => mapScheduleToResponseDto(schedule)),
+          status: 200,
+          body: response,
         };
       },
     },
@@ -117,7 +119,7 @@ export const scheduleContractRouter = (app: FastifyInstance) => ({
         const result = await scheduleService.assignScheduleAsync(interval.id, user.id);
 
         return {
-          status: 201,
+          status: 200,
           body: "Schedule assigned successfully",
         };
       },

@@ -34,6 +34,7 @@ export const zResponseScheduleDto = z.object({
       interval: z.number().int().multipleOf(5),
       capacity: z.number().int(),
       currentCapacity: z.number().int(),
+      isAssigned: z.boolean(),
       endAt: z.string().datetime(),
     }),
   ),

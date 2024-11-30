@@ -10,7 +10,18 @@ export class AdminScheduleService {
   constructor(private em: EntityManager, private scheduleCtx: EntityRepository<Schedule>) {}
 
   async getSchedulesAsync() {
-    return await this.scheduleCtx.find({}, { populate: ['daySchedules'] });
+    return await this.scheduleCtx.find(
+      {},
+      {
+        populate: ['daySchedules'],
+        orderBy: {
+          date: 'asc',
+          daySchedules: {
+            startAt: 'asc'
+          }
+        }
+      }
+    );
   }
 
   async getScheduleByIdAsync(scheduleId: number) {

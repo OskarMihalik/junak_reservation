@@ -16,8 +16,19 @@ export class ScheduleService {
     return await this.dayScheduleCtx.findOne({ id: intervalId })
   }
   async getWeekScheduleByDayAsync(day: Date) {
-    const weekDays = getWeekDays(day).map(date => date.toISOString().split('T')[0])
-    return await this.scheduleCtx.find({ date: { $in: weekDays } }, { populate: ['daySchedules'] })
+    const weekDays = this.getWeekDays(day).map(date => date.toISOString().split('T')[0])
+    return await this.scheduleCtx.find(
+      { date: { $in: weekDays } },
+      {
+        populate: ['daySchedules'],
+        orderBy: {
+          date: 'asc',
+          daySchedules: {
+            startAt: 'asc'
+          }
+        }
+      }
+    );
   }
   async assignScheduleAsync(intervalId: number, userId: number) {
     return await this.em.transactional(async em => {
