@@ -23,7 +23,7 @@ const registerRequest = async () => {
 const loginRequest = async () => {
   try {
     const response = await axios.post('http://localhost:3939/api/v1/users/login', {
-      email: 'deadpool1@mail.com',
+      email: 'deadpool@mail.com',
       password: 'password123',
     })
     cookie = response.headers['set-cookie'][0];
