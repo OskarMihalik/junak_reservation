@@ -14,11 +14,11 @@ export default function DashboardLayout({
         items={[
           {
             title: 'Home',
-            href: '/',
+            href: '/user',
           },
           {
-            title: 'About',
-            href: '/about',
+            title: 'Subscriptions',
+            href: '/user/sub',
           },
         ]}
       />
