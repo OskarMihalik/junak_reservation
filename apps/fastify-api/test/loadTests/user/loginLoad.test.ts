@@ -5,7 +5,7 @@ const NUM_REQUESTS = 1000
 const CONCURRENT_USERS = 100
 const registerRequest = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/auth/register', {
+    const response = await axios.post('http://localhost:3939/api/v1/users/register', {
       name: 'Wade',
       surname: 'Willson',
       aisId: '111333',
@@ -19,7 +19,7 @@ const registerRequest = async () => {
 }
 const loginRequest = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/auth/login', {
+    const response = await axios.post('http://localhost:3939/api/v1/users/login', {
       email: 'deadpool@mail.com',
       password: 'password123',
     })
