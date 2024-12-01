@@ -21,12 +21,8 @@ const AssignableCalendar = () => {
   const client = useQueryClientContext()
   const [pageDate, setPageDate] = useState(new Date())
   const [showModal, setShowModal] = useState(false)
-  const [selectedTerm, setSelectedTerm] = useState<{
-    day: string
-    time: string
-    capacity: string
-    id: number
-  } | null>(null)
+  const [selectedTerm, setSelectedTerm] = useState<{ day: string; time: string; capacity: string; id: number | undefined } | null>(null);
+
 
   const moveOneWeek = (direction: 'NEXT' | 'BACK') => {
     const date = new Date(pageDate)
@@ -42,13 +38,13 @@ const AssignableCalendar = () => {
 
   const { toast } = useToast()
 
-  const { data: weekSchedule } = client.schedule.getWeekScheduleByDayAsync.useQuery(
+  const { data: weekSchedule , refetch} = client.schedule.getWeekScheduleByDayAsync.useQuery(
     ['getWeekScheduleByDayAsync', pageDate],
     {
       params: {
         day: pageDate,
       },
-    },
+    }
   )
 
   const currentDatesWeek = useMemo(() => {
@@ -67,10 +63,11 @@ const AssignableCalendar = () => {
   const { mutate: assingSchedule } = client.schedule.assignScheduleAsync.useMutation({
     onSuccess: (response) => {
       toast({ description: response.body })
+      refetch()
     },
     onError: (error) => {
       toast({
-        description: error.body?.message || 'Failed to assign schedule. Please try again later.',
+        description: error.body?.message || 'Failed to assign schedule.',
       })
     },
   })
@@ -81,7 +78,7 @@ const AssignableCalendar = () => {
       console.error('Schedule ID is undefined')
       return
     }
-    console.log(`Clicked term on ${day} at ${time} with capacity: ${capacity}`)
+    console.log(`Clicked term on ${day} at ${time} with capacity: ${capacity} and id: ${id}`)
     setSelectedTerm({ day, time, capacity, id })
     setShowModal(true)
   }
@@ -100,23 +97,14 @@ const AssignableCalendar = () => {
             })
 
             return (
-              <div
-                key={date.toISOString()}
-                onClick={() =>
-                  handleTermClick(
-                    schedule?.id,
-                    getDate(date),
-                    schedule?.section?.[0]?.startAt || '',
-                    `${schedule?.section?.[0]?.capacity}/${schedule?.section?.[0]?.currentCapacity}`,
-                  )
-                }
-              >
+              <div key={date.toISOString()}>
                 <DaySchedule
                   day={getDate(date)}
                   schedule={schedule}
+                  onTermClick={handleTermClick} // Pass handleTermClick to DaySchedule
                 />
               </div>
-            )
+            );
           })}
         </CardContent>
         <CardFooter>
