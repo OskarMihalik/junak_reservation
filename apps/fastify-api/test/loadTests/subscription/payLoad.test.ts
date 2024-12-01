@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest'
 
 const NUM_REQUESTS = 5000
 const CONCURRENT_USERS = 500
-let COOKIE: string
+let cookie: string;
+let access_token: string;
+
 const registerRequest = async () => {
   try {
     const response = await axios.post('http://localhost:3939/api/v1/users/register', {
@@ -21,10 +23,16 @@ const registerRequest = async () => {
 const loginRequest = async () => {
   try {
     const response = await axios.post('http://localhost:3939/api/v1/users/login', {
-      email: 'deadpool@mail.com',
+      email: 'deadpool1@mail.com',
       password: 'password123',
     })
-    COOKIE = response.headers['set-cookie']
+    cookie = response.headers['set-cookie'][0];
+    console.log(cookie)
+    access_token = cookie
+      .split(';')
+      .find(cookie => cookie.trim().startsWith('access_token='))
+      ?.split('=')[1];
+
     return response.status === 200
   } catch (error) {
     return false
@@ -32,9 +40,17 @@ const loginRequest = async () => {
 }
 const paySubscription = async () => {
   try {
-    const response = await axios.post('http://localhost:3939/api/v1/subscriptions/pay', {
-      subscriptionPeriod: 3
-    })
+    const url = 'http://localhost:3939/api/v1/subscriptions/pay';
+    const requestBody = {
+      subscriptionPeriod: 12, // example valid subscription period
+    };
+    const response = await axios.post(url, requestBody, {
+      headers: {
+        Cookie: `access_token=${access_token}`, // Set the cookie header
+        'Content-Type': 'application/json', // Ensure correct content type
+      },
+    });
+
     return response.status === 200
   } catch (error) {
     return false
@@ -46,7 +62,11 @@ describe('Load Test - Pay Subscription Endpoint', () => {
     const registerResponse = await registerRequest()
     const loginResponse = await loginRequest()
 
-    const promises = Array.from({ length: CONCURRENT_USERS }).map(() => paySubscription())
+    // console.log(cookie)
+    // console.log(access_token)
+    // console.log(loginResponse)
+
+      const promises = Array.from({ length: CONCURRENT_USERS }).map(() => paySubscription())
     let successfulRequests = 0
 
     for (let i = 0; i < NUM_REQUESTS / CONCURRENT_USERS; i++) {
