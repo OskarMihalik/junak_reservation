@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { describe, expect, it } from 'vitest'
 
-const NUM_REQUESTS = 1000
-const CONCURRENT_USERS = 100
+const NUM_REQUESTS = 5000
+const CONCURRENT_USERS = 500
 const registerRequest = async () => {
   try {
     const response = await axios.post('http://localhost:3939/api/v1/users/register', {
@@ -30,7 +30,7 @@ const loginRequest = async () => {
 }
 
 describe('Load Test - Login Endpoint', () => {
-  it('should handle 1000 login requests successfully', async () => {
+  it('should handle 5000 login requests successfully', async () => {
     const registerResponse = await registerRequest()
 
     const promises = Array.from({ length: CONCURRENT_USERS }).map(() => loginRequest())
@@ -43,5 +43,5 @@ describe('Load Test - Login Endpoint', () => {
 
     console.log(`Successful requests: ${successfulRequests}/${NUM_REQUESTS}`)
     expect(successfulRequests).toBe(NUM_REQUESTS)
-  }, 60000)
+  }, 120000)
 })
