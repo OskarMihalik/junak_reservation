@@ -10,7 +10,7 @@ dayjs.extend(customParseFormat)
 export type Props = {
   day: string
   schedule?: ResponseScheduleDto
-  onTermClick?: (id: number | undefined, day: string, time: string, capacity: string) => void;
+  onTermClick?: (id: number | undefined, day: string, time: string, capacity: string, assigned: boolean) => void;
 }
 
 const formatTime = (time: string) => {
@@ -25,6 +25,7 @@ export const DaySchedule = ({ day, schedule, onTermClick }: Props) => {
         day,
         `${formatTime(section.startAt)} - ${formatTime(section.endAt)}`,
         `${section.capacity}/${section.currentCapacity}`,
+        section.isAssigned,
       )
     }
   }

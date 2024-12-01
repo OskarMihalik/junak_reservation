@@ -21,8 +21,13 @@ const AssignableCalendar = () => {
   const client = useQueryClientContext()
   const [pageDate, setPageDate] = useState(new Date())
   const [showModal, setShowModal] = useState(false)
-  const [selectedTerm, setSelectedTerm] = useState<{ day: string; time: string; capacity: string; id: number | undefined } | null>(null);
-
+  const [selectedTerm, setSelectedTerm] = useState<{
+    day: string;
+    time: string;
+    capacity: string;
+    id: number | undefined,
+    assigned: boolean
+  } | null>(null)
 
   const moveOneWeek = (direction: 'NEXT' | 'BACK') => {
     const date = new Date(pageDate)
@@ -38,13 +43,13 @@ const AssignableCalendar = () => {
 
   const { toast } = useToast()
 
-  const { data: weekSchedule , refetch} = client.schedule.getWeekScheduleByDayAsync.useQuery(
+  const { data: weekSchedule, refetch } = client.schedule.getWeekScheduleByDayAsync.useQuery(
     ['getWeekScheduleByDayAsync', pageDate],
     {
       params: {
         day: pageDate,
       },
-    }
+    },
   )
 
   const currentDatesWeek = useMemo(() => {
@@ -60,6 +65,7 @@ const AssignableCalendar = () => {
     moveOneWeek('BACK')
   }
 
+  //idk it works
   const { mutate: assingSchedule } = client.schedule.assignScheduleAsync.useMutation({
     onSuccess: (response) => {
       toast({ description: response.body })
@@ -72,14 +78,25 @@ const AssignableCalendar = () => {
     },
   })
 
-  //open modal confirmation and save term data
-  const handleTermClick = (id: number | undefined, day: string, time: string, capacity: string) => {
+  const { mutate: unassignSchedule } = client.schedule.unassignScheduleAsync.useMutation({
+    onSuccess: (response) => {
+      toast({ description: response.body })
+      refetch()
+    },
+    onError: (error) => {
+      toast({
+        description: error.body?.message || 'Failed to unassign schedule.',
+      })
+    },
+  })
+
+  // handle term click to either assign or unassign
+  const handleTermClick = (id: number | undefined, day: string, time: string, capacity: string, assigned: boolean) => {
     if (id === undefined) {
-      console.error('Schedule ID is undefined')
+      toast({ description: 'Schedule id is undefined.' })
       return
     }
-    console.log(`Clicked term on ${day} at ${time} with capacity: ${capacity} and id: ${id}`)
-    setSelectedTerm({ day, time, capacity, id })
+    setSelectedTerm({ day, time, capacity, id, assigned })
     setShowModal(true)
   }
 
@@ -101,10 +118,10 @@ const AssignableCalendar = () => {
                 <DaySchedule
                   day={getDate(date)}
                   schedule={schedule}
-                  onTermClick={handleTermClick} // Pass handleTermClick to DaySchedule
+                  onTermClick={handleTermClick}
                 />
               </div>
-            );
+            )
           })}
         </CardContent>
         <CardFooter>
@@ -117,25 +134,33 @@ const AssignableCalendar = () => {
         </CardFooter>
       </Card>
 
+      /{/* change the content if user is assigned to that term */}
       <Dialog open={showModal} onOpenChange={(open) => setShowModal(open)}>
         <DialogContent aria-describedby="dialog-description">
           <DialogHeader>
-            <DialogTitle>Confirm Assignment</DialogTitle>
+            <DialogTitle>{selectedTerm?.assigned ? 'Unassign Term' : 'Assign Term'}</DialogTitle>
           </DialogHeader>
           <p id="dialog-description">
-            You are about to assign to the term on <b>{selectedTerm?.day}</b> at{' '}
+            You are about to {selectedTerm?.assigned ? 'unassign' : 'assign'} to the term
+            on <b>{selectedTerm?.day}</b> at{' '}
             <b>{selectedTerm?.time}</b>. Do you want to proceed?
           </p>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancel
             </Button>
-            <Button variant="default" onClick={() => {
-              console.log(`Assigned to ${selectedTerm?.time} on ${selectedTerm?.day}`)
-              selectedTerm?.id && assingSchedule({ params: { id: selectedTerm.id.toString() } });
-              setShowModal(false)
-            }}>
-              Confirm
+            <Button
+              variant="default"
+              onClick={() => {
+                if (selectedTerm?.assigned) {
+                  selectedTerm?.id && unassignSchedule({ params: { id: selectedTerm.id.toString() } })
+                } else {
+                  selectedTerm?.id && assingSchedule({ params: { id: selectedTerm.id.toString() } })
+                }
+                setShowModal(false)
+              }}
+            >
+              {selectedTerm?.assigned ? 'Unassign' : 'Assign'}
             </Button>
             <DialogDescription></DialogDescription>
           </DialogFooter>
@@ -146,4 +171,5 @@ const AssignableCalendar = () => {
 }
 
 export default AssignableCalendar
+
 
