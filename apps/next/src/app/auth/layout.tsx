@@ -13,6 +13,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href: '/',
             },
           ]}
+          logout={false}
         />
       </section>
       <section className='flex-grow flex items-center justify-center w-full'>{children}</section>

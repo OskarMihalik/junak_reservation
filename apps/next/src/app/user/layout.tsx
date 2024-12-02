@@ -21,6 +21,7 @@ export default function DashboardLayout({
             href: '/user/sub',
           },
         ]}
+        logout={true}
       />
       {children}
     </section>

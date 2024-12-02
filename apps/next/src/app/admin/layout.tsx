@@ -21,6 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href: '/admin/sub',
             },
           ]}
+          logout={true}
         />
       </section>
       <section className='flex-grow flex items-center justify-center w-full'>{children}</section>
