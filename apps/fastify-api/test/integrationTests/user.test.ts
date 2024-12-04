@@ -24,7 +24,7 @@ beforeAll(() => {
 
 
 export const userAPITests = () =>{
-describe('User API Integration Tests (live DB)', () => {
+describe.sequential('User API Integration Tests (live DB)', () => {
   it('should REGISTER a new user', async () => {
     const response = await request.post('/api/v1/users/register').send({
       name: 'John',

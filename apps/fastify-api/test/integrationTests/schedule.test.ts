@@ -25,7 +25,7 @@ export const scheduleAPITests = () => {
     request = supertest('http://localhost:3939'); // Nahraďte URL adresou vášho API
   });
 
-  describe('Schedule API Integration Tests (live DB)', () => {
+  describe.sequential('Schedule API Integration Tests (live DB)', () => {
 
     beforeAll(async () => {
       // Prihlásenie ako admin a získanie tokenu
