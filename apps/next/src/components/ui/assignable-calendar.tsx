@@ -106,7 +106,8 @@ const AssignableCalendar = () => {
         <CardHeader>
           <CardTitle>Calendar</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-row h-5/6 overflow-x-auto justify-center">
+        <CardContent
+          className="flex flex-row flex-wrap md:flex-nowrap h-5/6 overflow-x-auto md:overflow-x-hidden justify-center">
           {currentDatesWeek.map((date) => {
             const schedule = weekSchedule?.body?.find((item) => {
               const itemDate = new Date(item.date)
@@ -134,7 +135,7 @@ const AssignableCalendar = () => {
         </CardFooter>
       </Card>
 
-      /{/* change the content if user is assigned to that term */}
+      {/* change the content if user is assigned to that term */}
       <Dialog open={showModal} onOpenChange={(open) => setShowModal(open)}>
         <DialogContent aria-describedby="dialog-description">
           <DialogHeader>

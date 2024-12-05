@@ -9,6 +9,7 @@ import { getDate, getWeekDays } from '@workspace/common'
 import React, { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+
 dayjs.extend(customParseFormat)
 
 const UserCalendar = () => {
@@ -49,11 +50,12 @@ const UserCalendar = () => {
     moveOneWeek('BACK')
   }
   return (
-    <Card className='flex flex-col w-full' style={{ height: '85vh' }}>
+    <Card className="flex flex-col w-full" style={{ height: '85vh' }}>
       <CardHeader>
         <CardTitle>Calendar</CardTitle>
       </CardHeader>
-      <CardContent className='flex flex-row h-5/6 overflow-x-auto justify-center'>
+      <CardContent
+        className="flex flex-row flex-wrap md:flex-nowrap h-5/6 overflow-x-auto md:overflow-x-hidden justify-center">
         {currentDatesWeek.map(date => (
           <DaySchedule
             day={getDate(date)}
@@ -66,8 +68,8 @@ const UserCalendar = () => {
         ))}
       </CardContent>
       <CardFooter>
-        <div className='ml-auto'>
-          <Button onClick={goBackWeek} className='mr-5'>
+        <div className="ml-auto">
+          <Button onClick={goBackWeek} className="mr-5">
             Go week back
           </Button>
           <Button onClick={goNextWeek}>Next week</Button>
