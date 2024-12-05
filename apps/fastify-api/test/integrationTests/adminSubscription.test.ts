@@ -25,7 +25,7 @@ export const adminSubcriptionAPITests = () => {
     request = supertest('http://localhost:3939'); // Nahraďte URL adresou vášho API
   });
 
-  describe('Admin subscription API Integration Tests (live DB)', () => {
+  describe.sequential('Admin subscription API Integration Tests (live DB)', () => {
 
     beforeAll(async () => {
       // Prihlásenie ako admin a získanie tokenu

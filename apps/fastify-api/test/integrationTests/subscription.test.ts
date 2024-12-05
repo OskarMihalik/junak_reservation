@@ -23,7 +23,7 @@ export const subscriptionAPITests = () => {
     request = supertest('http://localhost:3939'); // Nahraďte URL adresou vášho API
   });
 
-  describe('Subscription API Integration Tests (live DB)', () => {
+  describe.sequential('Subscription API Integration Tests (live DB)', () => {
 
     beforeAll(async () => {
       // Prihlásenie ako admin a získanie tokenu

@@ -65,7 +65,7 @@ const SubscriptionsPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 text-gray-100 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-white">Subscriptions</h1>
         <Input
           placeholder="Search by name or ais id"
@@ -75,6 +75,7 @@ const SubscriptionsPage: React.FC = () => {
         />
       </div>
 
+      <div className="overflow-x-auto">
       <table className="min-w-full border-collapse border border-gray-700 rounded-lg shadow-sm bg-gray-800">
         <thead className="bg-gray-700">
         <tr>
@@ -137,6 +138,7 @@ const SubscriptionsPage: React.FC = () => {
         )}
         </tbody>
       </table>
+      </div>
     </div>
 
   )
