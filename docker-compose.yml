@@ -19,6 +19,8 @@ services:
       target: next
     ports:
       - 3000:3000
+    environment:
+      - BACKEND_HOST=backend
   backend:
     depends_on:
       - postgres
@@ -30,3 +32,5 @@ services:
       - 3939:3939
     environment:
       - HOST=0.0.0.0
+      - POSTGRE_HOST=postgres
+

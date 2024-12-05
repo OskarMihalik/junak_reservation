@@ -7,25 +7,14 @@ import { existsSync, readFileSync } from 'node:fs'
 
 const options = {} as Options
 
-// if (process.env.NODE_ENV === 'production' && existsSync('./temp/metadata.json')) {
-//   options.metadataCache = {
-//     enabled: true,
-//     adapter: GeneratedCacheAdapter,
-//     // temp/metadata.json can be generated via `npx mikro-orm-esm cache:generate --combine`
-//     options: {
-//       data: JSON.parse(readFileSync('./temp/metadata.json', { encoding: 'utf8' })),
-//     },
-//   };
-// } else {
-//   options.metadataProvider = (await import('@mikro-orm/reflection')).TsMorphMetadataProvider;
-// }
+const POSTGRE_HOST = process.env.POSTGRE_HOST ?? 'localhost'
 
 const config: Options = {
   // for simplicity, we use the SQLite database, as it's available pretty much everywhere
   driver: PostgreSqlDriver,
   dbName: 'postgres',
   user: 'admin',
-  host: 'postgres',
+  host: POSTGRE_HOST,
   port: 5435,
   password: 'admin',
   // folder-based discovery setup, using common filename suffix

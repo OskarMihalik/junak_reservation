@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 
+const BACKEND_HOST = process.env.BACKEND_HOST ?? 'localhost'
+
 const nextConfig: NextConfig = {
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -21,8 +23,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        // destination: 'http://localhost:3939/:path*', // Proxy to Backend
-        destination: 'http://backend:3939/:path*', // Proxy to Backend
+        destination: `http://${BACKEND_HOST}:3939/:path*`, // Proxy to Backend
       },
     ]
   },
