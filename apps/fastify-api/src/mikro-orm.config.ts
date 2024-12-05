@@ -2,10 +2,10 @@
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import { Migrator } from '@mikro-orm/migrations'
 import { type Options, PostgreSqlDriver, GeneratedCacheAdapter } from '@mikro-orm/postgresql'
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs'
 // import { defineConfig, GeneratedCacheAdapter, Options } from '@mikro-orm/sqlite';
 
-const options = {} as Options;
+const options = {} as Options
 
 // if (process.env.NODE_ENV === 'production' && existsSync('./temp/metadata.json')) {
 //   options.metadataCache = {
@@ -25,7 +25,7 @@ const config: Options = {
   driver: PostgreSqlDriver,
   dbName: 'postgres',
   user: 'admin',
-  host: 'localhost',
+  host: 'postgres',
   port: 5435,
   password: 'admin',
   // folder-based discovery setup, using common filename suffix
@@ -39,7 +39,7 @@ const config: Options = {
   // enable debug mode to log SQL queries and discovery information
   debug: true,
   extensions: [Migrator],
-  ...options
+  ...options,
 }
 
 export default config

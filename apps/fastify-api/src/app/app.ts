@@ -12,8 +12,8 @@ export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions): Promise<void> {
   await fastify.register(cors, {
-    origin: ['localhost:3000'],
-    methods: ['GET', 'POST'],
+    origin: ['*'],
+    methods: ['*'],
     credentials: true,
   })
 
