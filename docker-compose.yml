@@ -28,3 +28,5 @@ services:
       target: fastify-api
     ports:
       - 3939:3939
+    environment:
+      - HOST=0.0.0.0
