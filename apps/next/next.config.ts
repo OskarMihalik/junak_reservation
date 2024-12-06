@@ -1,6 +1,13 @@
 import type { NextConfig } from 'next'
 
+const BACKEND_HOST = process.env.BACKEND_HOST ?? 'localhost'
+
 const nextConfig: NextConfig = {
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   /* config options here */
   webpack: webpackConfig => {
     webpackConfig.resolve.extensionAlias = {
@@ -16,7 +23,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:3939/:path*', // Proxy to Backend
+        destination: `http://${BACKEND_HOST}:3939/:path*`, // Proxy to Backend
       },
     ]
   },

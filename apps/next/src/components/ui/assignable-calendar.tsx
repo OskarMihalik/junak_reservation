@@ -22,10 +22,10 @@ const AssignableCalendar = () => {
   const [pageDate, setPageDate] = useState(new Date())
   const [showModal, setShowModal] = useState(false)
   const [selectedTerm, setSelectedTerm] = useState<{
-    day: string;
-    time: string;
-    capacity: string;
-    id: number | undefined,
+    day: string
+    time: string
+    capacity: string
+    id: number | undefined
     assigned: boolean
   } | null>(null)
 
@@ -67,26 +67,30 @@ const AssignableCalendar = () => {
 
   //idk it works
   const { mutate: assingSchedule } = client.schedule.assignScheduleAsync.useMutation({
-    onSuccess: (response) => {
+    onSuccess: response => {
       toast({ description: response.body })
       refetch()
     },
-    onError: (error) => {
-      toast({
-        description: error.body?.message || 'Failed to assign schedule.',
-      })
+    onError: error => {
+      if (error.status === 400 || error.status === 401 || error.status === 404) {
+        toast({
+          description: error.body?.message || 'Failed to assign schedule.',
+        })
+      }
     },
   })
 
   const { mutate: unassignSchedule } = client.schedule.unassignScheduleAsync.useMutation({
-    onSuccess: (response) => {
+    onSuccess: response => {
       toast({ description: response.body })
       refetch()
     },
-    onError: (error) => {
-      toast({
-        description: error.body?.message || 'Failed to unassign schedule.',
-      })
+    onError: error => {
+      if (error.status === 400 || error.status === 401 || error.status === 404) {
+        toast({
+          description: error.body?.message || 'Failed to unassign schedule.',
+        })
+      }
     },
   })
 
@@ -102,32 +106,27 @@ const AssignableCalendar = () => {
 
   return (
     <>
-      <Card className="flex flex-col w-full" style={{ height: '85vh' }}>
+      <Card className='flex flex-col w-full' style={{ height: '85vh' }}>
         <CardHeader>
           <CardTitle>Calendar</CardTitle>
         </CardHeader>
-        <CardContent
-          className="flex flex-row flex-wrap md:flex-nowrap h-5/6 overflow-x-auto md:overflow-x-hidden justify-center">
-          {currentDatesWeek.map((date) => {
-            const schedule = weekSchedule?.body?.find((item) => {
+        <CardContent className='flex flex-row flex-wrap md:flex-nowrap h-5/6 overflow-x-auto md:overflow-x-hidden justify-center'>
+          {currentDatesWeek.map(date => {
+            const schedule = weekSchedule?.body?.find(item => {
               const itemDate = new Date(item.date)
               return dayjs(itemDate).format('YYYY-MM-DD') === dayjs(date).format('YYYY-MM-DD')
             })
 
             return (
               <div key={date.toISOString()}>
-                <DaySchedule
-                  day={getDate(date)}
-                  schedule={schedule}
-                  onTermClick={handleTermClick}
-                />
+                <DaySchedule day={getDate(date)} schedule={schedule} onTermClick={handleTermClick} />
               </div>
             )
           })}
         </CardContent>
         <CardFooter>
-          <div className="ml-auto">
-            <Button onClick={goBackWeek} className="mr-5">
+          <div className='ml-auto'>
+            <Button onClick={goBackWeek} className='mr-5'>
               Go week back
             </Button>
             <Button onClick={goNextWeek}>Next week</Button>
@@ -136,22 +135,21 @@ const AssignableCalendar = () => {
       </Card>
 
       {/* change the content if user is assigned to that term */}
-      <Dialog open={showModal} onOpenChange={(open) => setShowModal(open)}>
-        <DialogContent aria-describedby="dialog-description">
+      <Dialog open={showModal} onOpenChange={open => setShowModal(open)}>
+        <DialogContent aria-describedby='dialog-description'>
           <DialogHeader>
             <DialogTitle>{selectedTerm?.assigned ? 'Unassign Term' : 'Assign Term'}</DialogTitle>
           </DialogHeader>
-          <p id="dialog-description">
-            You are about to {selectedTerm?.assigned ? 'unassign' : 'assign'} to the term
-            on <b>{selectedTerm?.day}</b> at{' '}
-            <b>{selectedTerm?.time}</b>. Do you want to proceed?
+          <p id='dialog-description'>
+            You are about to {selectedTerm?.assigned ? 'unassign' : 'assign'} to the term on <b>{selectedTerm?.day}</b>{' '}
+            at <b>{selectedTerm?.time}</b>. Do you want to proceed?
           </p>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
+            <Button variant='secondary' onClick={() => setShowModal(false)}>
               Cancel
             </Button>
             <Button
-              variant="default"
+              variant='default'
               onClick={() => {
                 if (selectedTerm?.assigned) {
                   selectedTerm?.id && unassignSchedule({ params: { id: selectedTerm.id.toString() } })
@@ -172,5 +170,3 @@ const AssignableCalendar = () => {
 }
 
 export default AssignableCalendar
-
-

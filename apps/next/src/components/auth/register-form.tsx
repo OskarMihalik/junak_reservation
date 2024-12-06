@@ -21,6 +21,7 @@ const RegisterForm = () => {
       if (data.status === 201) {
         toast({ description: 'User registered successfully' })
         router.push('/auth/login')
+        return
       }
       toast({ description: 'User registered failed' })
     },

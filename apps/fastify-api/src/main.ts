@@ -11,7 +11,7 @@ const start = async (): Promise<void> => {
   try {
     await fastifyInstance.ready()
 
-    await SubscriptionValidator.checkAndExpireSubscriptionsAsync();
+    await SubscriptionValidator.checkAndExpireSubscriptionsAsync()
 
     await fastifyInstance.listen({ host: HOST, port: PORT })
   } catch (error: unknown) {
