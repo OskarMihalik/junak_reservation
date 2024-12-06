@@ -40,7 +40,13 @@ not needed now
 
 # DB
 ```
-docker compose up
+docker compose up postgres
+```
+
+# Docker
+run whole stack:
+```
+docker compose up 
 ```
 
 # Routes
