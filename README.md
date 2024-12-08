@@ -49,6 +49,27 @@ run whole stack:
 docker compose up 
 ```
 
+# Tech stack
+### 1. [Nextjs](https://nextjs.org/) 
+   - application frontend 
+   - server side rendering
+### 2. [ts-rest](https://ts-rest.com/) 
+   - contract and schema between frontend and backend
+   - validation and serialization
+   - react hooks for api calls
+   - state management
+### 3. [Shadcn](https://ui.shadcn.com/) 
+   - UI component library
+### 4. [Fastify](https://fastify.dev/) 
+   - application backend
+### 5. [Mikro-orm](https://mikro-orm.io/) 
+   - database ORM
+### 6. [PostgreSQL](https://www.postgresql.org/) 
+   - database
+### 7. [PNPM](https://pnpm.io/) 
+   - package manager
+   - monorepo management
+
 # Routes
 - **/** - The home page where users can navigate to Register or Login  
   <img src="./images/homePage.PNG" alt="Home Page" width="300" height="200">
