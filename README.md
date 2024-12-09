@@ -49,6 +49,30 @@ run whole stack:
 docker compose up 
 ```
 
+# Testing
+For integration tests u need these preconditions:
+  - run DB
+```
+docker compose up postgres 
+```
+  - drop ORM
+  - create ORM
+  - run backend
+
+```
+cd apps/fastify-api
+npx mikro-orm-esm schema:drop --run
+npx mikro-orm-esm schema:create --run
+pnpm run dev
+```
+  - in userController change isAdmin in register route to true
+  - navigate to integration.test.ts file and run the describe method
+  - every run of integration tests needs empty DB!!!
+
+In order to run unit tests navigate to unitTests.test.ts file and run the describe method.
+
+In order to run load tests u need the same preconditions as for integration tests, then navigate to loginLoad.test.ts and payLoad.test.ts files and run the describe methods.
+
 # Tech stack
 ### 1. [Nextjs](https://nextjs.org/) 
    - application frontend 
