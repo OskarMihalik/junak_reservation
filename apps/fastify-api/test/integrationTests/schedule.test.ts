@@ -65,7 +65,7 @@ export const scheduleAPITests = () => {
 
     it('should POST/PAY subscription', async () => {
       const requestBody = {
-        subscriptionPeriod: 6, // example valid subscription period
+        subscriptionPeriod: 12, // example valid subscription period
       };
 
       const response = await request.post('/api/v1/subscriptions/pay')

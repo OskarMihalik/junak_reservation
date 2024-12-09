@@ -6,18 +6,13 @@ import { adminSubscriptionUnitTests } from './adminSubscription/adminSubscriptio
 import { tokenTests } from './user/token.test'
 import { describe } from 'vitest'
 
-export const unitTests = () => {
-  describe('Run All Test Suites', () => {
-    userUnitTests()
-    tokenTests()
-    scheduleUnitTests()
-    adminScheduleUnitTests()
-    subscriptionUnitTests()
-    adminSubscriptionUnitTests()
-  })
-}
 
-if (import.meta.url === 'file://' + __filename) {
-  // If so, run the tests immediately
-  unitTests()
-}
+describe('Run All Test Suites', () => {
+  userUnitTests()
+  tokenTests()
+  scheduleUnitTests()
+  adminScheduleUnitTests()
+  subscriptionUnitTests()
+  adminSubscriptionUnitTests()
+})
+
